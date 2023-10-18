@@ -1,0 +1,427 @@
+---
+layout: post
+title: Docker 101 - Primeiros passos e muito mais!
+date: '2020-04-26 14:30:07'
+tags:
+- devops
+- iac
+- sre
+- '101'
+- docker
+---
+
+**[Docker](https://www.docker.com/)** é uma plataforma Open Source escrita em Go &nbsp;(Linguagem de programação em alta performance desenvolvida pela Google) &nbsp;que ajuda a criação e a administração de ambientes isolados.
+
+Um container consiste de um ambiente completo (uma aplicação e todas suas dependências, bibliotecas, binários, arquivos de configuração) em um unico pacote. Ao _containerizar_ uma plataforma de aplicação e suas dependências as diferenças em distribuições de sistemas operacionais e camadas inferiores da infraestrutura são abstraídas.
+
+> Imagine que o container Docker é como se fosse um container real em um navio (servidor), todos os containeres estão lado a lado, porém seu conteúdo (ecossistema) não tem interferencia de outros containeres
+
+Não iremos explicar quando utilizar Containers e a base de como um conteiner funciona, para isto recomendo que você leia o post **[Containers ou Máquinas Virtuais - Quando usar cada um?](/container-vm)**
+
+> 
+
+## Criando a Infraestrutura do nosso laboratório
+
+Podemos utilizar o **Docker** instalado diretamente em nossa máquina, mas para manter o padrão dos outros laboratórios do blog, iremos utilizar um ubuntu server através do **vagrant,** você pode utilizar qualquer máquina virtual que quiser ou instalar &nbsp;diretamente em sua máquina, basta seguir para a próxima seção caso não &nbsp;queira utilizar o vagrant.
+
+> A idéia é quem passar por todos os posts ter um laboratório real de Infraestrutura como Código.
+
+> Caso você queira conhecer o vagrant sugiro que leia o post **[Vagrant 101](/vagrant-101/)** do blog. Você pode verificar todos os posts introdutórios através da **[tag 101](/tag/101)**
+
+### Vagrantfile para o Docker 
+
+Vamos criar um diretório para armazenar o conteúdo do Vagrantfile e popula-lo com as configurações para subir o ambiente.
+
+> Criaremos no momento apenas a máquina **docker01** em um post futuro iremos subir um cluster com mais máquinas.
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir ~/docker
+    $ cd ~/docker
+    $ vim Vagrantfile
+
+    # -*- mode: ruby -*-
+    # vi: set ft=ruby :
+    
+    Vagrant.configure("2") do |config|
+    
+      config.vm.box_check_update = false
+      config.vm.boot_timeout = 600
+      config.vm.define "docker01" do |machine|
+        machine.vm.box = "ubuntu/bionic64"
+        machine.vm.hostname = "docker01.caiodelgado.example"
+        machine.vm.network "private_network", ip: "10.10.10.20"
+        machine.vm.provider "virtualbox" do |vb|
+          vb.name = "docker01"
+          vb.memory = "1024"
+          vb.cpus = "1" 
+          vb.customize ["modifyvm", :id, "--groups", "/iac"]
+        end
+      end
+    end
+
+    $ vagrant up 
+
+<!--kg-card-end: markdown-->
+
+Adicione a entrada do docker01 no arquivo hosts para que o acesso ao mesmo fique mais fácil.
+
+    $ sudo sh -c "echo '10.10.10.20 docker01.caiodelgado.example' >> /etc/hosts"
+
+Vamos acessar o servidor para instalar o Docker.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd ~/docker
+    $ vagrant ssh
+
+<!--kg-card-end: markdown-->
+## Instalando o Docker
+
+Existem duas maneiras de instalar o Docker
+
+- Script de Conveniência 
+- Maneira Tradicional
+
+Para nosso laboratório você pode escolher qualquer uma das duas maneiras.
+
+### Script de Conveniência
+
+> **ATENÇÃO:** A utilização do script de Conveniência não é recomendado para ambientes de produção.
+
+A maneira mais simples de instalar docker é utilizando o script de conveniência, este script é responsável por validar sua distribuição Linux e instalar os pacotes necessários para o funcionamento do Docker
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo curl -fsSL https://get.docker.com | bash
+
+<!--kg-card-end: markdown-->
+
+Depois disto podemos adicionar nosso usuário ao grupo `docker`, isso vai garantir que possamos rodar os comandos com nosso usuário
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo gpasswd -a $USER docker
+
+<!--kg-card-end: markdown-->
+
+> Lembre-se que isto só funcionará após a regarga das varíaveis de ambiente, para isto faça logout e login novamente.
+
+### Maneira Tradicional 
+
+> Irei cobrir a instalação tradicional para o sistema Ubuntu, para outras distribuições verifique a**[Documentação Oficial](https://docs.docker.com/get-docker/)**
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo apt update
+    $ sudo apt install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg2 \
+        software-properties-common \
+        bash-completion \
+        jq -y
+    $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    $ sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+    $ sudo apt update
+    $ sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+<!--kg-card-end: markdown-->
+
+Depois disto podemos adicionar nosso usuário ao grupo `docker`, isso vai garantir que possamos rodar os comandos com nosso usuário
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo gpasswd -a $USER docker
+
+<!--kg-card-end: markdown-->
+
+> Lembre-se que isto só funcionará após a regarga das varíaveis de ambiente, para isto faça logout e login novamente.
+
+### Bash Completion
+
+Podemos também instalar o recurso de Bash Completion através do comando:
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo curl https://raw.githubusercontent.com/docker/machine/v0.16.0/contrib/completion/bash/docker-machine.bash -o /etc/bash_completion.d/docker-machine
+
+<!--kg-card-end: markdown-->
+## O que é um Container Docker?
+
+Um container docker é um processo em área restrita que executa um aplicativo e suas dependências no sistema operacional hospedeiro. Os recursos do sistema operacional(como o kernel) são compartilhados com os **containers** os quais utilizam apenas os recursos necessários para seu processo ser executado.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-98.png" class="kg-image" alt loading="lazy"><figcaption>Container Docker</figcaption></figure>
+## Executando nosso primeiro container Docker
+
+Para garantir que nosso usuário tem as permissões de executar o docker, vamos sair do terminal e conectar novamente via ssh
+
+<!--kg-card-begin: markdown-->
+
+    $ exit
+    $ vagrant ssh
+
+<!--kg-card-end: markdown-->
+
+Agora podemos testar a execução de um container através do comando `docker container run --rm -it hello-world`
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-93.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run --rm -it hello-world</figcaption></figure>
+
+Agora precisamos entender os parâmetros utilizados.
+
+- `docker container run` - Informa para o docker que queremos executar um container
+- `--rm` - Informa para o docker que queremos remover o container após ele cumprir seu papel.
+- `-it` ou `-i -t` - Informa para o docker executar o container em modo interativo `-i` &nbsp;e com um pseudoTTY `-t` , com isso podemos iteragir com o terminal e ver seus logs diretos em nosso `stdout` e `stderr` 
+- `hello-world` - Informa ao docker qual imagem de container gostariamos de executar.
+
+## Componentes do Docker
+
+Agora que rodamos nosso primeiro container, precisamos entender alguns componentes básicos da sua arquitetura e seu funcionamento.
+
+Ao executar o container com a imagem `hello-world` o Docker fez os seguintes passos:
+
+1. O `Docker Client` se comunicou com o `Docker Daemon`
+2. O `Docker Daemon` fez o download da imagem `hello-world` no[**Docker Hub**](https://hub.docker.com)
+3. O `Docker Daemon` criou um novo container, através da imagem que rodou o executável que produz o texto que vimos no terminal.
+4. O `Docker Daemon` enviou o texto diretamente para o `Docker Client` que enviou para nosso terminal.
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-94.png" class="kg-image" alt loading="lazy"><figcaption>Docker Components</figcaption></figure>
+### Imagem
+
+Uma imagem Docker é um pacote executável que inclui tudo o que é necessário para executar um aplicativo, incluindo o código, bibliotecas, variáveis de ambientes e arquivos de configuração.
+
+As imagens do Docker possuem camadas intermediárias que aumentam a capacidade de reutilização, diminuem o uso do disco e aceleram a construção do docker, permitindo que cada etapa seja armazenada em cache. Essas camadas intermediárias não são mostradas por padrão.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-96.png" class="kg-image" alt loading="lazy"><figcaption>Docker Image</figcaption></figure>
+
+A principal diferença entre um container e uma imagem é a camada gravável superior. Todas as gravações no container que adicionam novos dados ou modificam dados existentes são armazenados nessa camada gravável. Quando o container é excluido, a camada gravável também é excluida. A imagem subjacente permanece inalterada.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-97.png" class="kg-image" alt loading="lazy"><figcaption>Docker Images and Containers</figcaption></figure>
+
+Um ponto interessante é que em um cenário onde temos 1 container com a imagem `ubuntu:18.04` por exemplo, ocuparia `200MB` ( estamos considerando este tamanho para a imagem citada) somados a quantidade de dados específicos deste container ( vamos considerar `50MB` para este exemplo) totalizando `250MB`. o mesmo caso com 10 containers serão utilizados os `200MB` da imagem somados aos `50MB` de cada container em execução, pois suas camadas `readonly` é compartilhada, totalizando assim `750MB` no total.
+
+> O mesmo cenário em máquinas virtuais seria exponencialmente maior, uma vez que precisamos instalar todo o sistema operacional e parametrizar cada máquina individualmente.
+
+### DockerHub
+
+O **DockerHub** é um repositório publico de imagens docker onde podemos escolher e utilizar as imagens para subir nossos containers.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-101.png" class="kg-image" alt loading="lazy"><figcaption>https://hub.docker.com/_/ubuntu</figcaption></figure>
+
+Ao selecionar uma imagem temos diversas informações inclusive como fazer o download e utilizar a mesma.
+
+### Dockerfile
+
+O **Dockerfile** é um arquivo de instruções para como deve ser gerada a imagem Docker, através deste arquivo podemos criar novas imagens para serem utilizadas.
+
+Vamos criar um diretório e o arquivo `Dockerfile` para criar nossa primeira imagem docker.
+
+> É importante que o arquivo seja chamado `Dockerfile` (case sensitive) ou então não irá funcionar a imagem
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir -p /vagrant/dockerfiles/echontainer
+    $ cd /vagrant/dockerfiles/echontainer
+    $ vim Dockerfile
+
+    FROM alpine
+    ENTRYPOINT ["echo"]
+    CMD ["--help"] 
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-104.png" class="kg-image" alt loading="lazy"><figcaption>file: /vagrant/dockerfiles/echontainer/Dockerfile</figcaption></figure>
+
+Entendendo nosso Dockerfile:
+
+- `FROM alpine` - Informa que utilizaremos a imagem alpine como base.
+- `ENTRYPOINT ["echo"]` - Informa que o ponto de entrada do container será o comando echo, este `entrypoint` é responsável por manter o container vivo, caso ele retorne algum erro o container é parado.
+- `CMD ["--help"]` - Informa parâmetros adicionais ao entrypoint.
+
+> Em um post futuro exploraremos mais sobre construção de imagens, por hora focaremos no básico.
+
+Para construir a imagem podemos utilizar o comando `docker image build`
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /vagrant/dockerfiles/echontainer/
+    $ docker image build -t echontainer .
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-105.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image build -t echontainer .</figcaption></figure>
+
+Entendendo o comando:
+
+- `docker image build` - Informa ao docker que queremos construir uma imagem.
+- `-t` - Informa o nome e a tag da imagem no formato `nome:tag`, no nosso caso `echontainer:latest` 
+- `.` - Informa que o context de construção da imagem é o diretório atual.
+
+> Caso não seja informada a tag da imagem o docker entende que sua tag é a `latest`
+
+Podemos agora listar as imagens no repositório local da nossa máquina
+
+<!--kg-card-begin: markdown-->
+
+    $ docker image ls
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-106.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image ls</figcaption></figure>
+
+Agora que temos nossa imagem `echontainer` podemos executar nosso container
+
+<!--kg-card-begin: markdown-->
+
+    $ docker container run -it echontainer
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-107.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run -it echontainer</figcaption></figure>
+
+Perceba que nosso container foi executado, como resultado tivemos a execução do `entrypoint` do container com os parâmetros do `cmd` no caso executando o comando `echo --help`
+
+Podemos verificar que o container foi executado e parou em sequencia através do comando `docker container ls -a`
+
+> O comando `docker container ls` lista apenas os containers ativos , o comando `docker container ls -a` lista também os containers não ativos.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-108.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container ls -a</figcaption></figure>
+
+> Uma curiosidade é que nosso container recebeu o nome de `pendantic_bohr`, o nome de todos os containers que não são informados para serem criados com um nome através do parâmetro `--name` é gerado da forma `adjetivo` + `_` + `sobrenome` de um cientista ou hackers, lista completa no **[repositório oficial do projeto moby](https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go)**
+
+Podemos também alterar o `cmd` de um container diretamente na execução, passando após a declaração da imagem o parâmetro que gostariamos de utilizar, sendo assim a execução seria `entrypoint`+ parâmetro customizado.
+
+<!--kg-card-begin: markdown-->
+
+    $ docker container run -it echontainer "Estou lendo o blog do Caio em https://caiodelgado.dev"
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-109.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run -it echontainer "Estou lendo o blog do Caio em https://caiodelgado.dev"</figcaption></figure>
+
+Ao listar os containers através do `docker container ls -a` &nbsp;podemos verificar que o `COMMAND` do container executado foi modificado.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-110.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container ls -a</figcaption></figure>
+
+Vamos criar um novo `Dockerfile` para que possamos criar a imagem que utilizaremos no próximo tópico
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir -p /vagrant/dockerfiles/lighttpd
+    $ cd /vagrant/dockerfiles/lighttpd
+    $ vim Dockerfile
+
+    FROM alpine
+    RUN apk add --no-cache lighttpd
+    RUN echo "Lighttpd Web Server is Running" > /var/www/localhost/htdocs/index.html
+    EXPOSE 80
+    CMD lighttpd -D -f /etc/lighttpd/lighttpd.conf
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-112.png" class="kg-image" alt loading="lazy"><figcaption>file: /vagrant/dockerfiles/lighttpd/Dockerfile</figcaption></figure>
+
+> O parâmetro `RUN` faz com que seja executado um comando na criação da imagem, o parâmetro `EXPOSE` informa ao docker qual porta deve ser exposta ao criar um container com este `Dockerfile`
+
+> Lembrando que não estamos preocupados no momento com a qualidade da criação da imagem, isto ficará para um próximo post, estamos focando apenas no básico.
+
+Vamos criar a imagem agora
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /vagrant/lighttpd/lighttpd.conf
+    $ docker image build -t lighttpd .
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-113.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image ls</figcaption></figure>
+### Network 
+
+O Recurso de rede é utilizado para expor a aplicação do container para a rede da máquina hospedeira.
+
+> Existem diversas funcionalidades e tipos de redes, para este tutorial iremos abordar apenas a publicação de portas do container para a máquina hospedeira. Mais informações podem ser encontradas na [**Documentação Oficial**](https://docs.docker.com/network/).
+
+Trabalharemos com a rede do tipo host, onde é criada uma interface virtual dentro de nossa máquina e a mesma é roteada através dos recursos e regras de rede como `iptables` para o container. &nbsp;
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="https://lh4.googleusercontent.com/tThIEBlIporCBBx0LEjtBWXuoYF8gKlznbrxPjmYBl4Q7LDq0aPCnoHSNOBqwmTci3MFHDfRd9aID14chx6dtJq-6G8GjSDPguyLZYyD-jBorR0Ja3CS8_hWp_Io2ZMpg7kTF4T_sqA" class="kg-image" alt loading="lazy"><figcaption>Docker Host Network</figcaption></figure>
+
+Assim que instalamos o docker, por padrão é criada uma interface bridge chamada de `docker 0`, podemos lista-la através do comando `ip -c a show docker0`
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-114.png" class="kg-image" alt loading="lazy"><figcaption>$ ip -c a show docker0</figcaption></figure>
+
+> Note que a interface `docker0` encontra-se em estado `DOWN`
+
+Para expor a aplicação do container podemos utilizar o parâmetro `-p` ou `--publish` seguido da porta da máquina hospedeira e da porta aplicação do container.
+
+Vamos executar nosso container web
+
+<!--kg-card-begin: markdown-->
+
+    $ docker container run -d --name websrv -p 80:80 lighttpd
+
+<!--kg-card-end: markdown-->
+
+Entendendo os parâmetros
+
+- `-d` - Detached , faz com que executamos o container de forma "desanexada"
+- `-p 80:80` - Cria uma série de regras de encaminhamento para acessar o container através da porta 80 da máquina hospedeira. 
+
+Em seguida verifique os status da interface `docker0` que agora estará como `UP` .
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-115.png" class="kg-image" alt loading="lazy"><figcaption>$ ip -c a show docker0</figcaption></figure>
+
+Acesse agora o endereço `http://docker01.caiodelgado.example` em seu navegador e verifique que nosso webserver está sendo executado.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-117.png" class="kg-image" alt loading="lazy"><figcaption>http://docker01.caiodelgado.example</figcaption></figure>
+
+Podemos também verificar via terminal através do comando `curl localhost` na máquina `docker01` ou `curl docker01.caiodelgado.example` na nossa máquina local.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-118.png" class="kg-image" alt loading="lazy"><figcaption>$ curl localhost</figcaption></figure><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-119.png" class="kg-image" alt loading="lazy"><figcaption>$ curl docker01.caiodelgado.example</figcaption></figure>
+
+Vamos agora remover os containers criados anteriormente, podemos utilizar o comando `docker container ls -aq` para listar apenas os containers por `id` e passando isto como subshell para o comando `docker container rm -f` podemos forçar a remoção de todos os containers que estão rodando ou parados em nossa máquina. &nbsp;
+
+<!--kg-card-begin: markdown-->
+
+    $ docker container ls -aq
+    $ docker container rm -f $(docker container ls -aq) 
+
+<!--kg-card-end: markdown-->
+
+> O subshell pode ser executado através do comando `$(comando)` , sendo assim é executado como se fosse uma operação matemática como por exemplo `2 x (1+3)` , os parênteses são resolvidos primeiramente e depois o externo, logo no nosso comando executado é como se estivessemos executando `docker container rm -f <id1> <id2> <id3>` .
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-120.png" class="kg-image" alt loading="lazy"><figcaption>Listing and Removing containers</figcaption></figure>
+### Volumes
+
+Volumes são recursos utilizados para transportar arquivos e diretórios para dentro de um container.
+
+> Existem diversas funcionalidades e tipos de volumes, iremos abordar apenas a montagem de diretórios/arquivos dentro de um container. Mais informações podem ser encontradas na[**Documentação Oficial**.](https://docs.docker.com/storage/volumes/)
+
+Vamos criar o arquivo `index.html` para substituirmos o index da imagem `lighttpd` no momento que executarmos o webserver.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /vagrant/dockerfiles/lighttpd/
+    
+    $ cat > index.html <<EOF
+    <meta charset="UTF-8">
+    <h1> Servidor Lighttpd</h1>
+    <p> Esta aplicação está sendo executada em um container Docker
+    <h2> Acesse o tutorial em https://caiodelgado.dev/docker-101 </h2>
+    EOF
+
+<!--kg-card-end: markdown-->
+
+Agora que criamos nosso arquivo `index.html` podemos executar nosso container novamente.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /vagrant/dockerfiles/lighttpd/
+    $ docker container run -d --name website -p 80:80 -v $PWD/index.html:/var/www/localhost/htdocs/index.html lighttpd
+
+<!--kg-card-end: markdown-->
+
+> O parâmetro `-v` ou `--volume` é utilizado para os recursos de volumes, podendo ser diversos tipos de volumes, no nosso caso estamos enviando um arquivo `$PWD/index.html` (a váriavel `$PWD` significa `Print Working Directory` ou seja, o diretório atual ) para o caminho `/var/www/localhost/htdocs/index.html` no container.
+
+> Como vocês devem ter notado, os mapeamentos de máquina hospedeira para o container seguem no formado `<host>` + `:` + `<container>`
+
+Agora que executamos nosso container podemos verificar pelo navegador o endereço `http://docker01.caiodelgado.example` ou através do terminal pelo `curl` como informado no tópico de **Network**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-121.png" class="kg-image" alt loading="lazy"><figcaption>http://docker01.caiodelgado.example</figcaption></figure>
+
+Este post é o primeiro de uma série de posts onde utilizaremos o **Docker.**
+
+Em um próximo post irei explicar como melhorar a qualidade das imagens bem como outros recursos mais avançados do Docker. Continuem acompanhando!
+
+O código deste post encontra-se no repositório: [https://github.com/caiodelgadonew/blog-docker-101](https://github.com/caiodelgadonew/blog-docker-101)
+
+Ficamos por aqui e nos vemos em uma próxima.
+

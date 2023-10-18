@@ -1,0 +1,361 @@
+---
+layout: post
+title: Vault 101 - Aplicando Segurança na sua Infraestrutura como Código
+date: '2020-04-14 18:04:15'
+tags:
+- devops
+- iac
+- '101'
+---
+
+**[Vault](https://www.vaultproject.io/)**é um projeto criado pela **[Hashicorp](https://www.hashicorp.com/)** amplamente utilizado para armazenar informações de maneira segura, podendo ser tokens de acesso, senhas, certificados, chaves SSH dentre diversas outras informações.
+
+O **Vault** disponibiliza o acesso a estes dados através de Interface Gráfica, Linha de Comando ou Chamada HTTP em sua API.
+
+## Primeiros Passos
+
+Primeiramente precisamos instalar o client do vault na nossa workstation, para isto vamos até a página de [Download do Vault](https://www.vaultproject.io/downloads) para fazer download do binário de acordo com o sistema operacional que estivermos utilizando.
+
+No linux podemos efetuar o download e instalação através do comando:
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /tmp
+    $ curl https://releases.hashicorp.com/vault/1.4.0/vault_1.4.0_linux_amd64.zip -o vault.zip
+    $ unzip vault.zip
+    $ sudo mv vault /usr/local/bin
+
+<!--kg-card-end: markdown-->
+
+Ao executar o comando `vault --version` deve ser exibida a versão do client do vault, informando que a instalação foi efetuada com sucesso.
+
+Podemos também instalar o recurso de autocomplete (atualmente funcionando apenas nos terminais bash, zsh e fish) que irá facilitar nosso trabalho com Vault através do comando `vault -autocomplete-install`.
+
+> obs.: O Autocomplete funcionará assim que o terminal for reiniciado.
+
+## Vault Server
+
+Para armazenar os dados do vault precisaremos de um servidor, para isto iremos utilizar um ubuntu server através do **vagrant,** você pode utilizar qualquer máquina virtual que quiser, basta seguir para a próxima seção caso não queira utilizar o vagrant.
+
+> Caso você queira conhecer o vagrant sugiro que leia o post **[Vagrant 101](/vagrant-101/)** do blog.
+
+### Vagrantfile para o vault server 
+
+Vamos criar um diretório para armazenar o conteúdo do Vagrantfile e popula-lo com as configurações para subir o ambiente.
+
+> Também é possível rodar o vault server no modo **dev** (localmente) através do comando `vault server -dev` a utilização do mesmo não é indicada em ambientes de produção.
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir ~/vault
+    $ cd ~/vault
+    $ vim Vagrantfile
+
+    # -*- mode: ruby -*-
+    # vi: set ft=ruby :
+    
+    Vagrant.configure("2") do |config|
+    
+      config.vm.box_check_update = false
+      config.vm.boot_timeout = 600
+      config.vm.define "vault" do |machine|
+        machine.vm.box = "ubuntu/bionic64"
+        machine.vm.hostname = "vault.caiodelgado.example"
+        machine.vm.network "private_network", ip: "10.10.10.10"
+        machine.vm.provider "virtualbox" do |vb|
+          vb.name = "vault"
+          vb.memory = "1024"
+          vb.cpus = "1" 
+          vb.customize ["modifyvm", :id, "--groups", "/iac"]
+        end
+      end
+    end
+
+    $ vagrant up 
+
+<!--kg-card-end: markdown-->
+
+Adicione a entrada do vault no arquivo hosts para que o acesso ao mesmo fique mais fácil.
+
+    $ sudo sh -c "echo '10.10.10.10 vault.caiodelgado.example' >> /etc/hosts"
+
+Vamos acessar o servidor para instalar o vault server.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd ~/vault
+    $ vagrant ssh
+
+<!--kg-card-end: markdown-->
+
+Agora que estamos conectados no servidor podemos instalar o Vault.
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo su -
+    $ cd /tmp
+    $ curl https://releases.hashicorp.com/vault/1.4.0/vault_1.4.0_linux_amd64.zip -o vault.zip
+    $ unzip vault.zip
+    $ mv vault /usr/local/bin
+
+<!--kg-card-end: markdown-->
+
+Precisamos também dar ao **Vault** o acesso ao syscall **mlock** (previne a memória de ser jogada para o swap) sem rodar o processo como root e criar o usuario **vault** para rodar o serviço.
+
+<!--kg-card-begin: markdown-->
+
+    $ setcap cap_ipc_lock=+ep /usr/local/bin/vault
+    $ useradd --system --home /etc/vault.d --shell /bin/false vault
+
+<!--kg-card-end: markdown-->
+
+Agora podemos criar os arquivos de configuração responsáveis por parametrizar o vault server.
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir -p /etc/vault.d
+    $ touch /etc/vault.d/config.hcl
+    $ chown -R vault:vault /etc/vault.d
+    $ chmod 600 /etc/vault.d/config.hcl
+    $ vim /etc/vault.d/config.hcl
+
+    storage "mysql" {
+      username = "vaultuser"
+      password = "caiodelgado.dev"
+      database = "vault"
+    }
+    
+    listener "tcp" {
+     address = "10.10.10.10:8200"
+     tls_disable = 1
+    }
+
+<!--kg-card-end: markdown-->
+
+> A configuração para os **storage backends &nbsp;** está disponível na [**Documentação Oficial** &nbsp;](https://www.vaultproject.io/docs/configuration/storage)
+
+### Criando o Banco de Dados
+
+Como configuramos nosso storage backend para o **mysql** precisamos fazer a instalação do mesmo, iremos utilizar o **[MariaDB](https://mariadb.org/)** que é a versão open source do mysql e criar um usuário e o banco de dados
+
+<!--kg-card-begin: markdown-->
+
+    $ sudo apt update
+    $ sudo apt install mariadb-client mariadb-server -y
+    $ mysql -u root
+
+    > CREATE DATABASE vault;
+    > CREATE USER 'vaultuser'@'localhost' IDENTIFIED BY 'caiodelgado.dev';
+    > GRANT ALL PRIVILEGES ON vault.* TO 'vaultuser'@'localhost';
+
+<!--kg-card-end: markdown-->
+
+> Em ambientes de produção lembre-se de executar o [**mysql\_secure\_installation**](https://mariadb.com/kb/en/mysql_secure_installation/)para aumentar a segurança do banco de dados.
+
+### Configurando o systemd
+
+Para adicionar o vault como serviço do sistema, iremos criar seu arquivo de unidade.
+
+<!--kg-card-begin: markdown-->
+
+    vim /etc/systemd/system/vault.service
+
+    [Unit]
+    Description="HashiCorp Vault - A tool for managing secrets"
+    Documentation=https://www.vaultproject.io/docs/
+    Requires=network-online.target
+    After=network-online.target
+    ConditionFileNotEmpty=/etc/vault.d/config.hcl
+    StartLimitIntervalSec=60
+    StartLimitBurst=3
+    
+    [Service]
+    User=vault
+    Group=vault
+    ProtectSystem=full
+    ProtectHome=read-only
+    PrivateTmp=yes
+    PrivateDevices=yes
+    SecureBits=keep-caps
+    AmbientCapabilities=CAP_IPC_LOCK
+    Capabilities=CAP_IPC_LOCK+ep
+    CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+    NoNewPrivileges=yes
+    ExecStart=/usr/local/bin/vault server -config=/etc/vault.d/config.hcl
+    ExecReload=/bin/kill --signal HUP $MAINPID
+    KillMode=process
+    KillSignal=SIGINT
+    Restart=on-failure
+    RestartSec=5
+    TimeoutStopSec=30
+    StartLimitInterval=60
+    StartLimitIntervalSec=60
+    StartLimitBurst=3
+    LimitNOFILE=65536
+    LimitMEMLOCK=infinity
+    
+    [Install]
+    WantedBy=multi-user.target
+
+<!--kg-card-end: markdown-->
+
+Agora podemos habilitar, iniciar e verificar se o vault server está rodando.
+
+<!--kg-card-begin: markdown-->
+
+    $ systemctl enable vault
+    $ systemctl start vault
+    $ systemctl status vault
+
+<!--kg-card-end: markdown-->
+## Inicializando o servidor
+
+Agora que já parametrizamos o Banco de Dados e o Vault Server, podemos inicializar o servidor através do comando `vault operator init`
+
+<!--kg-card-begin: markdown-->
+
+    $ vault operator init 
+
+Output:
+
+    Unseal Key 1: F9Yo6vPumyQfuhTlTqcgkJhG3s02oeKJ6hNmkDKzItDE
+    Unseal Key 2: tuRLZjNOIv2DPO+TD3P3h9Gv1QQSL8rsFhjAe5q4CheH
+    Unseal Key 3: qA1TZ5J9iE2V3R6y/5DJh0i29MPTnGLsF/hvia2sOVAS
+    Unseal Key 4: GkDqxi6PbUj11bpQRJgJS9Fqebv0rxa+nYZCWcuZi0xG
+    Unseal Key 5: yMNs+Qh+LvOxav6ChiG3/uXhRQWRh1CY1vh1vUXqLtlt
+    
+    Initial Root Token: s.EZE7QYMjfKz6zf5sDHHk6KkL
+    
+    Vault initialized with 5 key shares and a key threshold of 3. Please securely
+    distribute the key shares printed above. When the Vault is re-sealed,
+    restarted, or stopped, you must supply at least 3 of these keys to unseal it
+    before it can start servicing requests.
+    
+    Vault does not store the generated master key. Without at least 3 key to
+    reconstruct the master key, Vault will remain permanently sealed!
+    
+    It is possible to generate new unseal keys, provided you have a quorum of
+    existing unseal keys shares. See "vault operator rekey" for more information.
+
+<!--kg-card-end: markdown-->
+
+Após inicializar o vault dois dados muito importantes são exibidos, a `unseal key` e a `initial root token`.
+
+> **ATENÇÃO:** Esta é a unica vez que estes dados são exbidos pelo Vault, guarde as `unseal keys` em um local seguro, de preferencia cada chave em um local diferente, uma vez que estas chaves serão responsáveis pelo desbloqueio do cofre. &nbsp;
+
+Todo servidor do Vault inicializa em &nbsp;`sealed state` (estado lacrado/selado). Neste ponto o Vault consegue acessar o storage fisicamente porém não consegue desencriptar os dados. Precisaremos das `unseal keys` para ensinar o Vault a descriptografar os dados.
+
+> O processo de `unseal` &nbsp; deve ser realizado a cada momento que o vault iniciar e pode ser realizado pela CLI ou via API. Note que a mensagem `Vault initialized with 5 key shares and a key threshold of 3` foi exibida na incialização, o que significa que são necessárias 3 das 5 chaves para o processo de `unseal`. &nbsp;
+
+## Destravando o Cofre
+
+Para destravar o cofre (`unseal the vault` ) podemos executar o comando `vault operator unseal` e digitar uma das chaves.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-41.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator unseal</figcaption></figure>
+
+Note que o `Unseal Progress` é listado como `1/3` ou seja, digitamos uma de 3 chaves necessárias para destravar o cofre e o mesmo encontra-se em estado de `Sealed`. Repita o passo mais duas vezes com chaves diferentes para destravar &nbsp;o cofre.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-42.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator unseal</figcaption></figure>
+
+Uma vez que o cofre for destravado, a mensagem de exibição será `Sealed false` o que significa que podemos começar a utilizar nosso vault.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-43.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator init</figcaption></figure>
+
+Finalmente podemos autenticar com o usuário root criado inicialmente. para isto execute o comando `vault login` somado do token informado no processo do `vault operator init`.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-44.png" class="kg-image" alt loading="lazy"><figcaption>$ vault login</figcaption></figure>
+## Criando secrets no Vault
+
+Agora que configuramos nosso servidor podemos voltar a nossa estação de trabalho e parametrizar o vault para acessar nosso server, para facilitar este processo iremos criar um script para parametrizar nosso client
+
+<!--kg-card-begin: markdown-->
+
+    $ cd ~/vault/
+    $ vim configurevault.sh
+
+    #!/bin/bash
+    export VAULT_ADDR='http://vault.caiodelgado.example:8200'
+    export VAULT_TOKEN='s.EZE7QYMjfKz6zf5sDHHk6KkL'
+
+    $ chmod +x configurevault.sh
+    $ source configurevault.sh
+
+<!--kg-card-end: markdown-->
+
+Execute `vault status` para verificar se o vault foi configurado corretamente.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-45.png" class="kg-image" alt loading="lazy"><figcaption>$ vault status</figcaption></figure>
+
+Uma vez configuradas as variáveis de ambiente, podemos interagir com nosso vault server, efetue o login através do comando `vault login $VAULT_TOKEN`.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-46.png" class="kg-image" alt loading="lazy"><figcaption>$ vault login $VAULT_TOKEN</figcaption></figure>
+
+O **Vault** trabalha, por padrão com secrets em formato `kv` (`key-value`). &nbsp;Para habilitar um secret utilizamos o comando `vault secrets enable <path>` ou `vault secrets enable -path=<path> <secret_type>`
+
+> Existem outras Engines &nbsp;de secrets como Chaves SSH, Tokens AWS ou até mesmo plugins customizados, podemos verificar todos os suportados através da **[Documentação Oficial](https://www.vaultproject.io/docs/secrets)**.
+
+Inicialmente iremos trabalhar com secrets do tipo `kv`, para isto, crie o nosso path de armazenamento e liste os secrets disponíveis.
+
+<!--kg-card-begin: markdown-->
+
+    $ vault secrets enable -path=blog -description='Segredos do Blog' kv 
+    $ vault secrets list
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-47.png" class="kg-image" alt loading="lazy"><figcaption>creating storage path</figcaption></figure>
+
+Para criar um secret em um determinado path, podemos utilizar o comando `vault kv put <path>/<secret-name> <key>=<value>`
+
+Crie o primeiro secret no nosso vault path `blog`
+
+<!--kg-card-begin: markdown-->
+
+    $ vault kv put blog/caiodelgado address=caiodelgado.dev
+
+<!--kg-card-end: markdown-->
+
+Uma mensagem de sucesso informa que o secret foi criado.
+
+<!--kg-card-begin: markdown-->
+
+    Success! Data written to: blog/caiodelgado
+
+<!--kg-card-end: markdown-->
+
+Utilize o comando `vault kv list <path>` para verificar as chaves existentes no storage.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-48.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog</figcaption></figure>
+
+Para acessar um secret utilizamos o comando `vault kv get <path>/<secret>`.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-49.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv get blog/caiodelgado</figcaption></figure>
+
+Um secret pode possuir diversos atributos `key-value` bem como subdiretórios, vamos adicionar mais alguns atributos ao nosso path:
+
+<!--kg-card-begin: markdown-->
+
+    $ vault kv put blog/caiodelgado/data owner='Caio Delgado' twitter='caiodelgadonew'
+
+<!--kg-card-end: markdown-->
+
+Listando o nosso path conseguimos verificar que existem agora um secret chamado `caiodelgado` bem como um sub-path `caiodelgado/`
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-50.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog</figcaption></figure>
+
+Para verificar o conteúdo do subpath basta informar o mesmo no comando para listagem.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-51.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog/caiodelgado/</figcaption></figure>
+
+> Mesmo que não seja informada a `/` final o vault entende que ao utilizar o comando `list` você quer listar um path
+
+Verifique os valores do secret `data`
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-52.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv get blog/caiodelgado/data</figcaption></figure>
+
+Este post é o primeiro de uma série de posts onde utilizaremos o **Vault.**
+
+Nos próximos posts iremos habilitar e utilizar sua interface de usuario e também &nbsp;integraremos o **Vault** com o **[Terraform](/terraform-101/)** para provisionar recursos na AWS de forma segura.
+
+O código deste post encontra-se no repositório: [https://github.com/caiodelgadonew/blog-vault-101](https://github.com/caiodelgadonew/blog-vault-101)
+
+Ficamos por aqui com esse post e nos vemos em uma próxima!
+

@@ -1,0 +1,27 @@
+---
+layout: post
+title: Canal Youtube
+date: '2021-03-15 14:08:54'
+---
+
+E ai pessoal, tudo bom?  
+  
+Nos últimos meses muita coisa aconteceu na minha vida e acabei deixando meu blog de lado por conta da minha mudança.  
+  
+Agora que comecei a me estabilizar novamente em solo estrangeiro vou voltar com os posts do blog e mais, um canal do youtube com conteúdos de tech.  
+  
+A ideia é que para cada post do blog eu tenha um vídeo com hands-on explicando o passo a passo do que foi feito, percebi que tem gente que prefere texto, outros vídeos então porque não tornar isso acessível pra todos?  
+  
+Lógico que também trarei conteúdos exclusivos no canal do youtube, sempre focando em ajudar a comunidade de tecnologia.  
+  
+Qual vai ser a frequência dos vídeos? ainda não sei, vamos ver como vai ser a aceitação, o que posso dizer é quanto mais pessoas aparecerem e forem aproveitando o conteúdo e gostando da informação, mais foco vou dando pra esse tipo de conteúdo.  
+  
+Se inscrevam no canal, compartilhem com seus amigos.  
+Logo mais apareço com mais novidades pra vocês!  
+  
+Fiquem seguros e quem puder Fique em Casa!  
+  
+  
+O primeiro vídeo é relacionado ao primeiro post do blog, em uma palestra feita no DevOps Days SP Pocket 2020
+
+<figure class="kg-card kg-embed-card"><iframe width="200" height="113" src="https://www.youtube.com/embed/Vr_5F6CNhBc?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></figure>

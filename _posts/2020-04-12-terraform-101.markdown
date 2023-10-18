@@ -1,0 +1,301 @@
+---
+layout: post
+title: Terraform 101 -  Instalando e fazendo deploy de EC2 na AWS
+date: '2020-04-12 14:59:28'
+tags:
+- iac
+- terraform
+- '101'
+---
+
+**[Terraform](/p/13fdebd0-f105-4ada-93f0-1354e78f5fe8/www.terraform.io)** é uma ferramenta da [**Hashicorp**](/p/13fdebd0-f105-4ada-93f0-1354e78f5fe8/www.hashicorp.com) para construir, modificar e versionar a infraestrutura de maneira segura e eficiente.
+
+Através do terraform adicionamos camadas de abstração a serviços de cloud como Google Cloud Platform, Amazon Web Services, Microsoft Azure, Digital Ocean, dentre outros serviços não somente de cloud.
+
+Primeiramente precisamos entender dois recursos chaves do Terraform para gerenciar nossa infraestrutura: **Providers** e **Provisioners.**
+
+**[Providers](https://www.terraform.io/docs/providers/index.html)** são responsáveis por interagir com a API e expor os recursos. Geralmente quando falamos de providers estamos falando de IaaS (Infrastructure as a Service), PaaS (Platform as a Service) ou Saas (Softwares as a Service)
+
+Alguns exemplos de providers:
+
+- **IaaS:** GCP, AWS, Azure, Digital Ocean, Alibaba Cloud, Openstack.
+- **PaaS:** Heroku. 
+- **SaaS:** Cloudflare, DNSSimple, DNSMadeEasy.
+
+**[Provisioners](https://www.terraform.io/docs/provisioners/index.html)** são responsáveis por provisionar o ambiente, podemos dizer que provisioners são o ultimo recurso e devem ser utilizados apenas se a API do provider não fornecer todos os recursos que precisamos.
+
+Alguns exemplos de provisioners:
+
+- file 
+- local-exec
+- remote-exec
+- chef
+- puppet
+- salt
+
+O Terraform utiliza a linguagem **[HCL](https://github.com/hashicorp/hcl/blob/hcl2/hclsyntax/spec.md)** (Hashicorp Configuration Language) que é uma linguagem declarativa de fácil entendimento e compatível com **[JSON](https://www.json.org/).**
+
+### Vamos a prática
+
+> Em todos os laboratórios deste blog utilizamos distribuições de linux, também utilizamos os comandos como super user, em ambientes de produção lembre-se de tomar as precauções de segurança.
+
+> **ATENÇÃO:** Como estamos trabalhando em um ambiente de Cloud, lembre-se de destruir o laboratório quando terminar o mesmo para evitar dores de cabeça com cobrança, uma vez que os provedores de Cloud irão cobrar pelos recursos que estiverem na infraestrutura.
+
+Para rodar o terraform não precisamos mais do que uma máquina linux e terminal. Caso esteja utilizando outro sistema operacional, verifique no [site do terraform na seção de downloads](https://www.terraform.io/downloads.html)o binário correto para seu sistema.
+
+### Amazon Web Services
+
+Primeiramente precisamos da nossa conta na AWS, pode ser inclusive a conta **FreeTier** pra quem ainda não tem uma conta na mesma.
+
+Não irei cobrir o passo a passo da criação da conta uma vez que já possúo minha conta da AWS e existem diversos outros blogs explicando o passo a passo de como criar uma e inclusive o próprio site da **AWS** [\<link\>](https://aws.amazon.com/premiumsupport/knowledge-center/create-and-activate-aws-account/)
+
+Acesse o [console da AWS](https://console.aws.amazon.com)e faça o login com sua conta e pesquise pelo produto **IAM** (Identity and Access Management)
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-2.png" class="kg-image" alt loading="lazy"><figcaption>AWS Services Console </figcaption></figure>
+
+Iremos criar um usuário para interagir com a AWS, clique em **USERS** e em seguida em **ADD USER**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-3.png" class="kg-image" alt loading="lazy"><figcaption>Add User</figcaption></figure>
+
+Digite um nome para o usuário, selecione **programatic access** para que seja criado um ID e Senha para a chave de acesso e clique em **Next.**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-18.png" class="kg-image" alt loading="lazy"><figcaption>Programatic Access</figcaption></figure>
+
+Adicione a politica **AmazonEC2FullAccess** ao usuário, o que dará permissão total ao usuário apenas a recursos da EC2, e clique em **Next.**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-12.png" class="kg-image" alt loading="lazy"><figcaption>Attaching Policies</figcaption></figure>
+
+**Tags** são utilizadas para adicionar informações relevantes ao usuario, clique em **Next.**
+
+<figure class="kg-card kg-image-card"><img src="content/images/2020/04/image-13.png" class="kg-image" alt loading="lazy"></figure>
+
+Verifique os dados e clique em **Create user**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-14.png" class="kg-image" alt loading="lazy"><figcaption>Create User</figcaption></figure>
+
+Clique em **show** e copie o **Access key ID** e **Secret access key**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-15.png" class="kg-image" alt loading="lazy"><figcaption>Access Key and Secret Access Key </figcaption></figure>
+
+> O usuário criado e chave de acesso não devem ser compartilhados, uma vez que quem tiver acesso a estes dados terá controle sobre os recursos adicionados como política, por questões de segurança este usuário não existe mais em minha conta.
+
+### Instalando o AWS CLI 
+
+Iremos [instalar o AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)(Command Line Interface) para autenticarmos via terminal e possibilitar nosso acesso via terraform.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /tmp
+    $ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+    $ unzip awscliv2.zip
+    $ sudo ./aws/install
+
+<!--kg-card-end: markdown-->
+
+Verifique a instalação através do comando `aws --version` que deve retornar a versão atual do `aws cli` instalado, agora iremos configurar nosso cli com o ID e chave de acesso criadas anteriormente, execute o comando `aws configure` e em seguida digite o ID e Chave (para região e output format apenas tecle **\<ENTER\>** ).
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-21.png" class="kg-image" alt loading="lazy"><figcaption>$ aws configure</figcaption></figure>
+
+Isso vai configurar o arquivo `~/.aws/credentials` com suas credenciais
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-20.png" class="kg-image" alt loading="lazy"><figcaption>file: ~/.aws/credentials</figcaption></figure>
+### Instalando o Terraform
+
+Iremos fazer o download da versão do terraform **0.12.24** no momento da escrita deste post.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /tmp 
+    $ curl https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip -o terraform.zip
+    $ unzip terraform.zip
+    $ sudo mv terraform /usr/local/bin
+    $ terraform --version
+
+<!--kg-card-end: markdown-->
+
+Caso o comando `terraform --version` retorne a versão correta, no nosso caso `Terraform v0.12.24` , significa que a instalação ocorreu com sucesso.
+
+## Criando o código HCL
+
+Os arquivos utilizados pelo terraform tem a terminação `.tf` , eu particularmente gosto de separar em diversos arquivos para que fique mais fácil a manutenção do mesmo, então vamos criar nosso primeiro código para criar uma instância na AWS.
+
+Criaremos o diretório para armazenar nosso código bem como um arquivo para configurar nosso backend.
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir ~/terraform-101
+    $ cd ~/terraform-101
+    $ vim backend.tf
+
+<!--kg-card-end: markdown-->
+
+No arquivo `backend.tf` iremos adicionar o conteúdo para informar qual será o provider utilizado, no nosso caso **aws** , bem como a região que será aplicada.
+
+<!--kg-card-begin: markdown-->
+
+file: `~/terraform-101/backend.tf`
+
+    provider "aws" {
+       region = var.region
+    }
+
+<!--kg-card-end: markdown-->
+
+Declaramos um conteudo proveniente de uma variavel chamada region através do parâmetro `var.<nome_variavel>` , iremos definir o conteúdo desta variável posteriormente.
+
+> O uso de variáveis não é necessário, podemos simplesmente declarar os valores diretamente no arquivo, porém ao utilizar as variáveis a manutenção e o reaproveitamento do código é feito de maneira mais simples
+
+Vamos criar um arquivo `ec2.tf` que será responsável pela definição da nossa instância ec2.
+
+<!--kg-card-begin: markdown-->
+
+    $ vim ec2.tf
+
+    resource "aws_instance" "server" {
+      ami = var.ami
+      instance_type = var.instance_type
+    
+      tags = {
+        Name = var.name
+        Environment = var.env
+        Provisioner = "Terraform"
+      }
+    }
+
+<!--kg-card-end: markdown-->
+
+Novamente estamos declarando diversas variáveis e precisamos definilas em um arquivo para que seja utilizada. Criaremos então o arquivo `variables.tf` onde definiremos estas variáveis.
+
+<!--kg-card-begin: markdown-->
+
+    $ vim variables.tf
+
+    variable "region" {
+      description = "Define what region the instance will be deployed"
+      default = "us-east-1"
+    }
+    
+    variable "name" {
+      description = "Name of the Application"
+      default = "server01"
+    }
+    
+    variable "env" {
+      description = "Environment of the Application"
+      default = "prod"
+    }
+    
+    variable "ami" {
+      description = "AWS AMI to be used "
+      default = "ami-07ebfd5b3428b6f4d"
+    }
+    
+    variable "instance_type" {
+      description = "AWS Instance type defines the hardware configuration of the machine"
+      default = "t2.micro"
+    }
+
+<!--kg-card-end: markdown-->
+
+> O campo `description` informa a descrição de cada variável, é uma boa prática dizer o que cada variável significa e/ou para que é utilizada.
+
+> O campo `default` informa o valor padrão da variável.
+
+Agora que ja criamos nosso arquivo precisamos executar o comando `terraform init` para que seja feito download dos providers do terraform em nosso diretório.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-22.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform init</figcaption></figure>
+
+Agora que iniciamos o provider teremos uma pasta oculta `.terraform` em nosso diretório com os plugins necessários.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-24.png" class="kg-image" alt loading="lazy"><figcaption>Terraform 101 Directory Structure</figcaption></figure>
+
+Podemos agora efetuar o planejamento da nossa infraestrutura através do comando `terraform plan` , que será responsável por nos mostrar qual seria o resultado após a aplicação do nosso código.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-25.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
+
+No final da saída do comando é exibido quantos planos serão aplicados, modificados ou destruídos.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-26.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
+
+Para aplicar o plano utilizaremos o comando `terraform apply` que nos mostrará o resultado do plan e perguntando se queremos aplicar o recurso, digite **yes** para iniciar a aplicação.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-28.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+
+Após isto é exibida a informação dos recursos que estão sendo criados bem como o estado final após execução
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-31.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+
+No painel da **AWS** podemos ir em **EC2** e verificar a instância que foi criada conforme as configurações listadas.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-32.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
+
+Ao executar um terraform, é criado um arquivo `terraform.tfstate` no diretório com o conteúdo do que foi criado/modificado para que o terraform possa efetuar ações de modificação na infraestrutura sabendo seu estado anterior.
+
+Vamos alterar o nome da variável `name` para `server02` e executar novamente o terraform apply.
+
+<!--kg-card-begin: markdown-->
+
+    vim variables.tf
+
+    variable "region" {
+      description = "Define what region the instance will be deployed"
+      default = "us-east-1"
+    }
+    
+    variable "name" {
+      description = "Name of the Application"
+      default = "server02"
+    }
+    
+    variable "env" {
+      description = "Environment of the Application"
+      default = "prod"
+    }
+    
+    variable "ami" {
+      description = "AWS AMI to be used "
+      default = "ami-07ebfd5b3428b6f4d"
+    }
+    
+    variable "instance_type" {
+      description = "AWS Instance type defines the hardware configuration of the machine"
+      default = "t2.micro"
+    }
+    
+
+<!--kg-card-end: markdown-->
+
+Execute o `terraform plan` e verifique que o nome da instância será modificado, porém ela não será destruida e recriada.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-34.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
+
+Podemos executar o `terraform apply` para aplicar a configuração **.**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-35.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+
+Note que agora é exibido que um componente foi atualizado.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-36.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+
+Podemos também verificar na **EC2** da **AWS** que a modificação foi efetuada com sucesso.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-37.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
+
+Para destruir a instância podemos executar o comando `terraform destroy`
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-33.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform destroy </figcaption></figure>
+
+Digite **yes** para destruir a instância, note que o processo todo levará um tempo para ser executado, aguarde o retorno pelo terminal.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-38.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform destroy</figcaption></figure>
+
+Verifique também no **EC2** da **AWS &nbsp;** que a instância foi terminada.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-40.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
+
+Irei continuar uma série de posts sobre Terraform e gradativamente aumentando a complexidade com outros recursos e inclusive integrando com **ansible** e outras ferramentas. Não deixe de acompanhar o blog!
+
+O código deste post encontra-se no repositório: [https://github.com/caiodelgadonew/blog-terraform-101](https://github.com/caiodelgadonew/blog-terraform-101) &nbsp;
+
+Ficamos por aqui com esse post e nos vemos em uma próxima!
+

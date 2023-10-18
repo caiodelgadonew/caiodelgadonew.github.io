@@ -1,0 +1,20 @@
+---
+layout: post
+title: Sobre o Blog
+date: '2020-03-19 03:06:57'
+tags:
+- about
+---
+
+Olá, tudo bom?
+
+Decidi nas últimas semanas enfim criar um blog para compartilhar sobre alguns assuntos como a minha jornada vindo de SysAdmin Microsoft passando pela migração para Site Reliability Engineer e o futuro.
+
+Então pra quem seguir vai ser comum visualizarem posts neste blog sobre tecnologias e a cultura DevOps bem como ferramentas que uso no dia-a-dia e que são interessantes de se estudar.
+
+Sou formado em Engenharia da Computação e pós graduado em Engenharia de Redes. Fã de Zeldinha desde criança e tenho como hobbie a música, então eu também rodo um canal no YouTube onde falo assuntos direcionados a música e tento faço alguns covers de músicas em versão metal.
+
+<figure class="kg-card kg-embed-card"><iframe width="480" height="270" src="https://www.youtube.com/embed/ljc05AvfqcM?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></figure>
+
+Bem, é isso e nos vemos logo mais com alguns posts sobre a cultura DevOps, Site Reliability Engineering e tecnologia em geral.
+

@@ -1,0 +1,144 @@
+---
+layout: post
+title: 'Ansible, Puppet, Chef, Terraform: Qual ferramenta de Infrastructure As Code
+  devo utilizar?'
+date: '2020-03-29 04:03:36'
+tags:
+- iac
+- devops
+---
+
+Antes de começar a dissertar sobre o assunto queria destacar dois pontos:
+
+1. O assunto é uma sugestão do usuário _lord\_fil_ do grupo &nbsp;[@devopsbr](https://t.me/devopsbr) no telegram.
+2. Este post não vai dizer qual ferramenta é melhor ou não, a idéia é mostrar quais os pontos positivos em se usar cada ferramenta em sua infraestrutura.
+
+Uma das perguntas que mais vejo nos dias atuais é:
+
+> Qual ferramenta de IaC eu devo estudar ou utilizar
+
+A resposta não é tão simples assim e depende de diversas variáveis então vamos falar primeiramente de cada ferramenta listada.
+
+## Ansible 
+
+O **Ansible** é uma ferramenta de automação criada para gerenciar múltiplas máquinas de uma única vez através de **playbooks** escritas no formato **YAML.**
+
+### Características:
+
+- Arquitetura Master to Nodes;
+- Linguagem de Configuração Simples;
+- Não necessita de agents;
+- Simples de realizar manutenção;
+- Curva de aprendizado curta.
+
+O Ansible é uma ferramenta muito poderosa, uma vez que ela necessita apenas de confiança **SSH** (seja por chave ou senha) e **Python** , o que a maioria das máquinas linux já possúi por padrão.
+
+## Puppet
+
+O **Puppet** é uma ferramenta de gerenciamento de configurações de sistemas Unix-like e Windows através de uma linguagem declarativa baseada em **Ruby.**
+
+## Características:
+
+- Servidores Multi-Master
+- Arquitetura Agent to Master; 
+- Suporta segregação de Ambientes (Prod/Homolog/Dev);
+- Comunicação segura SSL;
+- Idempotência;
+- Indisponibilidade do **Master** pode não impactar no funcionamento dos agents. 
+
+## Chef
+
+O **Chef** é uma ferramenta de gerenciamento de configuração com diversas integrações
+
+### Características:
+
+- Servidores Pimary & Backup
+- Arquitetura Master-Agent
+- Integração com todos os produtos da Chef.io
+- Produtos podem ser utilizados sem a necessidade de toda a Stack
+- Possúi ferramenta para Compliance-as-Code
+
+## Terraform
+
+**Terraform** é uma ferramenta para construir, modificar e versionar infraestruturas criada para atuar &nbsp;principalmente com as clouds como **Azure, Digital Ocean, AWS, GCP, Oracle Cloud, VMWare Cloud.** bem como outras diversas ferramentas _DevOps._
+
+## Caracteristicas:
+
+- É agnostica a clouds;
+- Linguagem Própria ( **HCL** - Hashicorp Configuration Language);
+- Executa o planejamento de execução antes da aplicação da configuração;
+- Interage com as Clouds mais utilizadas no mercado;
+- Integração com outras ferramentas de Infrastructure as code.
+
+* * *
+
+## Tá, e agora? qual delas eu uso?
+
+Bem, você pode utilizar basicamente qualquer uma delas que estará "bem servido" em sua infraestrutura, mas eu particularmente gosto de citar alguns casos e quais são as ferramentas que eu prefiro utilizar para cada cenário.
+
+> As opniões e preferências expressas aqui não devem ser levadas como verdade absoluta, use o que se adaptar melhor a sua demanda, a realidade é que não existe ferramenta melhor que a outra.
+
+### Quando e porque eu utilizaria o Ansible?
+
+### 
+
+Gosto muito de utilizar o ansible para algumas finalidades como parametrizar minha workstation, posso criar uma playbook que já instala e parametriza minha máquina por completa.
+
+Um dos pontos mais positivos do ansible é sua curva de aprendizado, facilmente após estudar o ansible por cerca de 4 horas já é possível começar a utilizar ele em sua infraestrutura para pequenas tarefas e tomar proveito de todo o seu poder.
+
+Não gosto de utilizar o ansible para garantir a configuração de um parque de máquinas, por exemplo, porque o ansible não garante (por si só) que a configuração estará ativa em todas as máquinas. Porém podemos utilizar ferramentas de servidor como o **Ansible Tower** (ferramenta proprietária da Red Hat e paga) ou o **Ansible AWX** (projeto open source alternativo ao Tower) para potencializar sua utilização.
+
+Outra maneira que eu gosto de utilizar o ansible é somado a outras ferramentas principalmente com o **Terraform** (ainda vamos falar sobre isto.
+
+Através do **chocolatey** ou outro recurso é possível utilizar o ansible para parametrizar e gerenciar softwares em estações Windows.
+
+### Quando e porque eu utilizaria o Puppet?
+
+### 
+
+O puppet é uma ferramenta sensacional para gerenciar um datacenter ou um parque de workstations, por possuir recursos como o **runinterval** em que a configuração é aplicada diversas vezes de acordo com a configuração de intervalo configurada e caso o servidor esteja indisponível o agente não para de tentar aplicar a configuração do mesmo, uma vez que ele não precise receber algum arquivo do servidor que esteja indisponível.
+
+O Puppet trabalha com a arquitetura multi-master, onde todos os servidores instalados e configurados na rede trabalham em tempo integral, diferente de ferramentas como o Chef que utiliza servidores primários e backups.
+
+Outra grande vantagem do puppet é que ele funciona em ambientes Unix e Microsoft nativamente através da instalação do Puppet Agent.
+
+Podemos também expandir as funcionalidades através de recursos como o **Puppet DB** para coletar e inventariar as máquinas e o **Puppet Dashboard** ou o **Foreman** como ferramentas de dashboard para visualizar e verificar as configurações aplicadas no ambiente.
+
+### Quando e porque eu utilizaria o Chef?
+
+### 
+
+O chef torna-se uma ferramenta poderosissima uma vez que ele possúi uma stack completa para gerenciamento de infraestrutura, automação de apps e dependências, compliance e segurança.
+
+Todas as ferramentas da stack do Chef utilizam a linguagem Ruby DSL (Ruby Domain Specific Language) que tem uma curva de aprendizado bastante inclinada e é orientada a desenvolvedores.
+
+A ferramenta [**Chef Inspec**](https://www.inspec.io) é a ferramenta do mercado que criou uma nova área chamada de **Compliance-as-Code** e criou uma iniciativa chamada [**dev-sec**](https://dev-sec.io) que é um framework de hardening criado para integrar **devops** com **security**.
+
+### Quando e porque eu utilizaria o Terraform?
+
+### 
+
+O Terraform é uma ferramenta perfeita para gerenciar infraestrutura em clouds, existem diversos recursos e módulos para interagir com diversas clouds tornando ela uma ferramenta, como a própria hashicorp diz, **cloud-agnostic** , ou seja, independentemente de cloud se você conhece a o terraform, você consegue gerenciar sua cloud.
+
+O maior poder do terraform é ele se integrar de maneira simples e fácil a ferramentas como Ansible e Puppet, bem como as ferramentas da própria [**Hashicorp**](https://www.hashicorp.com) como o [**Vault**](https://www.hashicorp.com/products/vault/) e o [**Packer**](https://packer.io/) **.** Com esta versatilidade podemos garantir nossa infraestrutura completa em uma cloud.
+
+## Então o que eu devo buscar na sua opnião Caio?
+
+### 
+
+Na minha humilde opnião, é sempre bom estudar e conhecer bem de **Ansible** e **Terraform** , estas ferramentas vão te providenciar uma maior versatilidade trabalhando com Clouds.
+
+Caso a ideia seja gerenciar um Data Center, Workstations e Servidores Físicos ou Virtuais, minha recomendação é estudar **Ansible** e **Puppet.** Nestes casos em específicos eu utilizo o ansible para instalar o agent do puppet em diversas estações e em seguida eu gerencio as mesmas através do puppet com o **Foreman** como dashboard.
+
+## Considerações Finais
+
+### 
+
+A recomendação para todos os casos é: conheça bem o **Ansible** e entenda alguma linguagem de script como **Shell, Python** e até mesmo **Powershell.** Saber utilizar o **Terraform** é um diferencial poderoso nos dias atuais e na maneira em que tudo está migrando para ambientes cloud.
+
+Mas acima de conhecer todas as ferramentas citadas acima o mais importante é conhecer bem **Linux, Redes, Conceitos de Cloud** e até mesmo **Windows.** Sabendo estes tópicos você estará a frente de boa parte dos profissionais do mercado.
+
+Nunca esqueça também que, trabalhar com **Tecnologia da Informação** é um aprendizado constante, você nunca saberá tudo mas sempre precisará continuar estudando, nunca desanime e sempre foque em melhorar a qualidade do seu trabalho, esse é o melhor caminho para ser um profissional de sucesso.
+
+Ficamos por aqui com esse post e nos vemos em uma próxima!
+

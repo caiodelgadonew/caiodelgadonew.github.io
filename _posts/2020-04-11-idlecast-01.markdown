@@ -1,0 +1,20 @@
+---
+layout: post
+title: 'Idlecast.io - Trajetórias nas Carreiras de TI #01'
+date: '2020-04-11 18:05:10'
+tags:
+- cultura
+- devops
+---
+
+Fui convidado por um colega de trabalho que se tornou um grande amigo **[Alisson Machado](https://www.linkedin.com/in/alisson-machado-85490a22/)** (BigData DevOps Engineer @ Schaeffler) para participar do primeiro episódio sobre **Trajetórias nas Carreiras de TI** do um podcast **[idlecast.io](https://anchor.fm/idlecast)** organizado pelo[**Hederson Boechat**](https://www.linkedin.com/in/hedersonboechat/)(Senior Software Developer @ Systax) com a participação também de um outro amigo o **[Reverson Dias](https://www.linkedin.com/in/reverson-dias-17b0a279/)** ( DevOps Engineer @ Geru).
+
+Nesse podcast falamos das nossas origens, como entramos na TI e como chegamos na área que estamos atualmente bem como dicas de como seguir e/ou migrar de área na TI.  
+  
+Disponível no **Spotify.**
+
+<figure class="kg-card kg-embed-card kg-card-hascaption"><iframe width="100%" height="232" allowtransparency="true" frameborder="0" allow="encrypted-media" title="Spotify Embed: Trajetórias nas Carreiras de T.I #01" src="https://open.spotify.com/embed-podcast/episode/7tQ0GGmTWiz7o4hPBNrUDJ"></iframe><figcaption>Spotify</figcaption></figure>
+
+Disponível no **Anchor**
+
+<figure class="kg-card kg-embed-card kg-card-hascaption"><iframe src="https://anchor.fm/idlecast/embed" height="102px" width="400px" frameborder="0" scrolling="no"></iframe><figcaption>Anchor</figcaption></figure>

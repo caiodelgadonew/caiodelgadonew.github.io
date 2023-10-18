@@ -1,0 +1,398 @@
+---
+layout: post
+title: Vagrant 101 - Utilizando Infraestrutura como Código para estudo e desenvolvimento.
+date: '2020-04-13 04:02:55'
+tags:
+- devops
+- iac
+- '101'
+---
+
+**[Vagrant](https://www.vagrantup.com/)** é uma ferramenta de automação da **[Hashicorp](https://www.vagrantup.com/)** na qual podemos utilizar para subir de servidores até uma infraestrutura e até mesmo configurar estes servidores.
+
+O Vagrant utiliza a linguagem **[HCL](https://github.com/hashicorp/hcl)** (Hashicorp Configuration Language) que é de fácil entendimento (baseada em Ruby) e permite que possamos definir recursos da máquina virtual tais como hostname, ip, cpu, memória, disco, quantidade de máquinas a serem criadas e scripts a serem executados.
+
+O Vagrant precisa de um **Provider** , que geralmente é um **Hypervisor** (Virtualbox, KVM, HyperV, VMWare, etc...), que será utilizado como base para fornecer os recursos de virtualização, podemos dizer que o Vagrant é como se fosse um frontend em **CLI** que utiliza os hypervisors como um backend para executar suas tarefas .
+
+Para executar as ações o Vagrant trabalha com dois papéis distintos: **Provisioner** e **Provider**
+
+### Provider
+
+O Provedor (provider) é responsável pela criação da instância dos ambientes, o **Vagrant** vem por padrão com suporte ao **VirtualBox, Hyper-V** e **Docker** , porém vários outros **[providers](https://www.vagrantup.com/docs/providers/)** podem ser utilizados.
+
+### Privisioners
+
+O Provisionador (provisioner) é o responsável pelas tarefas a serem executadas de forma automatizada, como por exemplo a instalação de pacotes e a configuração do sistema, o **Vagrant** oferece suporte a diversos [**provisioners**](https://www.vagrantup.com/docs/provisioning/) como por exemplo **Ansible, Chef, Puppet, Shell, File,** etc...
+
+## Vagrant Box
+
+O vagrant constroi suas instâncias através das **Vagrant Boxes** , que podem ser encontradas fácilmente na **[Vagrant Cloud](https://app.vagrantup.com/boxes/search).**
+
+> **Opnião Pessoal:** Não recomendo a utilização do vagrant para ambientes de produção a não ser que o usuário crie suas próprias boxes, as boxes que se encontram no Vagrant Cloud são criadas por usuários comuns e como todo sistema tem suas vulnerabilidades. Ao criar uma box própria você pode tomar suas próprias precauções de segurança. para isto pode-se utilizar o **[Packer](https://packer.io/)** também da Hashicorp.
+
+## Vagrantfile
+
+O **Vagrantfile** é o arquivo responsável por descrever nossa infraestrutura e subir a aplicação diretamente no Vagrant. O arquivo tem sua estrutura HCL porém é possivel utilizar todos os recursos da linguagem Ruby para descrever o mesmo.
+
+> É importante que o arquivo tenha o nome de **Vagrantfile** (case-sensitive) ou o comando do vagrant não irá localiza-lo
+
+## Instalando o Vagrant
+
+Para instalar o vagrant devemos acessar a **[página oficial de downloads](https://www.vagrantup.com/downloads.html)** e buscar o pacote referente ao seu sistema operacional, no caso estarei fazendo a instalação em um sistema **Debian-Based**.
+
+<!--kg-card-begin: markdown-->
+
+    $ cd /tmp
+    $ curl https://releases.hashicorp.com/vagrant/2.2.7/vagrant_2.2.7_x86_64.deb -o vagrant.deb
+    $ sudo dpkg -i vagrant.deb
+
+<!--kg-card-end: markdown-->
+
+Podemos executar o comando `vagrant --version` para verificar se o vagrant foi instalado corretamente.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-53.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant --version</figcaption></figure>
+## Definindo as Máquinas Virtuais
+
+Em nosso post, estaremos utilizando o **VirtualBox 6.1** , para isto basta efetuar o download do virtualbox através da **[página oficial de downloads](https://www.virtualbox.org/wiki/Downloads)** e efetuar a instalação de acordo com seu sistema operacional.
+
+Para definir nossa máquina virtual utilizaremos o **Vagrantfile.**
+
+<!--kg-card-begin: markdown-->
+
+    Vagrant.configure("2") do |config|
+      config.vm.box = "ubuntu/bionic64"
+      config.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+        vb.cpus = "2"
+      end
+    end
+
+<!--kg-card-end: markdown-->
+
+No exemplo acima estamos definindo uma infraestrutura de apenas uma máquina com a box do Ubuntu Bionic 64bits, a máquina possuirá 1024 MiB de RAM e 2 vCPUs.
+
+Toda estrutura do Vagrantfile começa informando a versão (Major Version) que irá utilizar do Vagrant e termina com a palavra **end**.
+
+Como nosso vagrant está na versão 2.2.7, a major version é a 2, então o arquivo começará com: `Vagrant.configure("2") do |config|` e como segue a estrutura do ruby, terminará com um `end`.
+
+O próximo passo é informar qual a box que iremos utilizar nessa instância, nesse caso utilizaremos uma imagem chamada**[ubuntu/bionic64](https://app.vagrantup.com/ubuntu/boxes/bionic64)** : `config.vm.box = "ubuntu/bionic64"`.
+
+Por último criamos uma infraestrutura onde informamos qual o provedor da nossa instância e suas configurações como cpu, memória, hostname, disco, etc... &nbsp;`config.vm.provider "virtualbox" do |vb|`
+
+### Criando nossa primeira instância
+
+Podemos utilizar o comando `vagrant init <box>` para que seja criado o arquivo do **Vagrantfile**. Crie um diretório para armazenar os arquivos do nosso tutorial.
+
+<!--kg-card-begin: markdown-->
+
+    $ mkdir ~/vagrant-101/
+    $ cd ~/vagrant-101/
+    $ vagrant init -m ubuntu/bionic64
+
+<!--kg-card-end: markdown-->
+
+> Ao executar o comando `vagrant init <box>` um arquivo Vagrantfile é criado com diversas opções já preenchidas, porém comentadas. Para quem está começando a trabalhar com o vagrant, talvez seja a melhor opção, caso contrário podemos passar o parâmetro `-m` ou `--minimal` para remover todas as linhas comentadas e deixar somente o necessário.
+
+Edite o arquivo para que fique igual a nosso exemplo
+
+<!--kg-card-begin: markdown-->
+
+    $ vim Vagrantfile
+
+    Vagrant.configure("2") do |config|
+      config.vm.box = "ubuntu/bionic64"
+      config.vm.provider "virtualbox" do |vb|
+        vb.memory = "1024"
+        vb.cpus = "2"
+      end
+    end
+
+<!--kg-card-end: markdown-->
+
+Para verificar se a sintaxe está correta, podemos utilizar o comando `vagrant validate` . Agora vamos construir o ambiente de acordo com o que se encontra parametrizado no Vagrantfile:
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant up
+
+<!--kg-card-end: markdown-->
+
+Agora que temos nosso ambiente disponível, podemos acessar o mesmo através do comando `vagrant ssh`, conecte-se a máquina e desconecte-se em seguida
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant ssh
+    $ exit
+
+<!--kg-card-end: markdown-->
+
+Note também diretamente no **Virtualbox** que a máquina foi criada.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-61.png" class="kg-image" alt loading="lazy"><figcaption>VirtualBox</figcaption></figure>
+
+Quando utilizamos o comando `vagrant ssh` o que acontece "por trás dos panos" é simplesmente um comando SSH comum, onde a chave utilizada esta armazenada no diretório oculto **.vagrant** localizado no mesmo diretório do **Vagrantfile.**
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-54.png" class="kg-image" alt loading="lazy"><figcaption>$ tree -a</figcaption></figure>
+
+Podemos verificar a fundo os parâmetros utilizados pelo `vagrant ssh` através do comando `vagrant ssh-config`.
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-56.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh-config</figcaption></figure>
+
+Para desligar a máquina podemos utilizar o comando `vagrant halt` e para destruir o ambiente podemos executar o comando `vagrant destroy` e digitar `y` para confirmar a destruição do ambiente.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant halt
+    $ vagrant destroy
+
+<!--kg-card-end: markdown-->
+## Construindo Múltiplas Instâncias
+
+Modifique agora o arquivo para adicionarmos uma segunda instância para nossa infraestrutura
+
+<!--kg-card-begin: markdown-->
+
+    $ vim Vagrantfile
+
+    Vagrant.configure("2") do |config|
+      config.vm.define "server1" do |server1|
+        server1.vm.box = "ubuntu/bionic64"
+      end
+      config.vm.define "server2" do |server2|
+        server2.vm.box = "centos/7"
+      end
+    end
+
+<!--kg-card-end: markdown-->
+
+Vamos construir nossa infraestrutura novamente e verificar os status da mesma.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant up
+    $ vagrant status
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-57.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant status</figcaption></figure>
+
+Para acessar cada máquina podemos utilizar o comando `vagrant ssh <machine_name>`, podemos também verificar o sistema operacional através do comando `cat /etc/*release`.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant ssh server1
+    $ cat /etc/*release
+    $ exit
+    
+    $ vagrant ssh server2
+    $ cat /etc/*release
+    $ exit
+
+<!--kg-card-end: markdown-->
+
+Podemos também executar um comando diretamente através do parâmetro `-c` no `vagrant ssh`
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant ssh server1 -c "cat /etc/*release"
+    $ vagrant ssh server2 -c "cat /etc/*release"
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-58.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh &lt;machine&gt; -c "cat /etc/*release" </figcaption></figure>
+
+Vamos destruir nosso ambiente.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant destroy -f
+
+<!--kg-card-end: markdown-->
+
+> O parâmetro `-f` força o comando executado sem solicitar confirmação.
+
+## Configurando Interfaces de Rede
+
+Vamos editar agora nosso **Vagrantfile** para definir o endereço IP e as configurações das interfaces de rede através do parâmetro `vm.network`
+
+<!--kg-card-begin: markdown-->
+
+    $ vim Vagrantfile
+
+    Vagrant.configure("2") do |config|
+      config.vm.define "server1" do |server1|
+        server1.vm.box = "ubuntu/bionic64"
+        server1.vm.network "private_network", ip: "10.10.10.11"
+      end
+      config.vm.define "server2" do |server2|
+        server2.vm.box = "centos/7"
+        server2.vm.network "private_network", ip: "10.10.10.12"
+      end
+    end
+
+<!--kg-card-end: markdown-->
+
+Vamos construir o ambiente e verificar o endereço IP das máquinas
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant up
+    $ vagrant ssh server1 -c "ip -c a show enp0s8"
+    $ vagrant ssh server2 -c "ip -c a show eth1"
+
+<!--kg-card-end: markdown-->
+
+Após isto, vamos destruir novamente nosso ambiente
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant destroy -f
+
+<!--kg-card-end: markdown-->
+## Utilizando Provisioners
+
+Vamos utilizar os provisioners para executar ações após a máquina ter sido criada pelo **Provider.**
+
+Iremos utilizar o provisioner **shell** para instalar o nginx na máquina ubuntu.
+
+<!--kg-card-begin: markdown-->
+
+    $ vim Vagrantfie
+
+    Vagrant.configure("2") do |config|
+      config.vm.box = "ubuntu/bionic64"
+      config.vm.network "private_network", ip: "10.10.10.11"
+      config.vm.provision "shell", inline: "sudo apt update && sudo apt install nginx -y"
+    end
+
+<!--kg-card-end: markdown-->
+
+Vamos construir nosso ambiente e verificar se o nginx foi instalado com sucesso.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant up
+    $ curl 10.10.10.11
+
+<!--kg-card-end: markdown-->
+
+Podemos também verificar diretamente no navegador digitando o endereço do servidor
+
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-59.png" class="kg-image" alt loading="lazy"><figcaption>nginx on google chrome</figcaption></figure>
+
+Vamos destruir nosso ambiente novamente.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant destroy -f
+
+<!--kg-card-end: markdown-->
+
+Podemos alterar a maneira na qual nosso script é chamado, uma das maneiras é declarando o script no início do arquivo. E novamente verificar se o nginx foi instalado corretamente.
+
+<!--kg-card-begin: markdown-->
+
+    $ vim Vagrantfile
+
+    $script = <<-EOF
+    sudo apt update
+    sudo apt install nginx -y
+    EOF
+    
+    Vagrant.configure("2") do |config|
+      config.vm.box = "ubuntu/bionic64"
+      config.vm.network "private_network", ip: "10.10.10.11"
+      config.vm.provision "shell", inline: $script
+    end
+
+    $ vagrant up
+    $ curl 10.10.10.11
+
+<!--kg-card-end: markdown-->
+
+Vamos destruir nosso ambiente novamente.
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant destroy -f
+
+<!--kg-card-end: markdown-->
+## BONUS: Laboratório de Docker
+
+Vamos criar um Dockerfile no qual criará três servidores com docker e docker-compose instalado e configurará um cluster de **Docker Swarm** para que possa ser utilizado como ambiente de estudos para o Docker.
+
+> Deixei o script de uma maneira que sua manutenção seja feita de maneira fácil, sendo assim podendo ser aproveitado com pequenas modificações pra diversas outras aplicações.
+
+<!--kg-card-begin: markdown-->
+
+    $ vim Vagrantfile
+
+    # -*- mode: ruby -*-
+    # vi: set ft=ruby :
+    
+    machines = {
+      "master" => {"memory" => "1024", "cpu" => "2", "ip" => "100", "image" => "ubuntu/bionic64"},
+      "node01" => {"memory" => "1024", "cpu" => "2", "ip" => "101", "image" => "ubuntu/bionic64"},
+      "node02" => {"memory" => "1024", "cpu" => "2", "ip" => "102", "image" => "centos/7"}
+    }
+    
+    Vagrant.configure("2") do |config|
+    
+      machines.each do |name, conf|
+        config.vm.define "#{name}" do |machine|
+          machine.vm.box = "#{conf["image"]}"
+          machine.vm.hostname = "#{name}.caiodelgado.dev"
+          machine.vm.network "private_network", ip: "10.10.10.#{conf["ip"]}"
+          machine.vm.provider "virtualbox" do |vb|
+            vb.name = "#{name}"
+            vb.memory = conf["memory"]
+            vb.cpus = conf["cpu"]
+            vb.customize ["modifyvm", :id, "--groups", "/Docker-Lab"]
+          end
+          machine.vm.provision "shell", path: "docker.sh"
+          if "#{conf["image"]}" == "centos/7"
+            machine.vm.provision "shell", inline: "sudo systemctl start docker && sudo systemctl enable docker"
+          end
+          if "#{name}" == "master"
+            machine.vm.provision "shell", path: "master.sh"
+          else
+            machine.vm.provision "shell", path: "worker.sh"
+          end
+        end
+      end
+    end
+    
+
+<!--kg-card-end: markdown-->
+
+Criaremos também um script para instalação do docker, chamado `docker.sh`, um arquivo vazio chamado `worker.sh` &nbsp;que receberá o comando de join do cluster e um script para configurar o master chamado `master.sh`.
+
+<!--kg-card-begin: markdown-->
+
+    $ vim docker.sh
+
+    #!/bin/bash
+    curl -fsSL https://get.docker.com | sudo bash
+    sudo curl -fsSL "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    sudo usermod -aG docker vagrant
+
+    $ touch worker.sh
+    $ vim master.sh
+
+    #!/bin/bash
+    sudo docker swarm init --advertise-addr=10.10.10.100
+    sudo docker swarm join-token worker | grep docker > /vagrant/worker.sh
+
+<!--kg-card-end: markdown-->
+
+Após tudo isto basta executar o comando `vagrant up` que todo o ambiente estará disponível em questão de minutos.
+
+Podemos verificar estado do cluster através do comando
+
+<!--kg-card-begin: markdown-->
+
+    $ vagrant ssh master -c "docker node ls"
+
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-60.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh master -c "docker node ls"</figcaption></figure>
+
+O código deste post encontra-se no repositório: [https://github.com/caiodelgadonew/blog-vagrant-101](https://github.com/caiodelgadonew/blog-vagrant-101)
+
+Ficamos por aqui com esse post e nos vemos em uma próxima!
+
