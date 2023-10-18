@@ -58,7 +58,7 @@ Execute o comando acima 3 vezes e informe três chaves diferentes, no meu caso o
 
 Ao final do processo deve ser exibida a mensagem informando que o cofre não está mais no estado `sealed` (lacrado)
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/05/image.png" class="kg-image" alt loading="lazy"><figcaption>Vault Sealed: False</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/05/image.png" class="kg-image" alt loading="lazy"><figcaption>Vault Sealed: False</figcaption></figure>
 
 ## Habilitando a Engine de Secrets da AWS
 
@@ -84,7 +84,7 @@ Agora que estamos conectados ao servidor do Vault, podemos habilitar a engine de
 
 Uma mensagem informará que a engine foi habilitada com sucesso
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/05/image-24.png" class="kg-image" alt loading="lazy"><figcaption>$ vault secrets enable -path=aws aws</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/05/image-24.png" class="kg-image" alt loading="lazy"><figcaption>$ vault secrets enable -path=aws aws</figcaption></figure>
 ## Configurando a Engine de Secrets da AWS
 
 Com a engine habilitada, precisamos configura-la, para isto utilizaremos a chave de acesso com `Full Access` criada anteriormente
@@ -128,7 +128,7 @@ Com os dados de acesso a AWS, precisamos configurar uma role. O Vault sabe como 
     }
     EOF
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="content/images/2020/05/image-27.png" class="kg-image" alt loading="lazy"></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="/docs/assets/2020/05/image-27.png" class="kg-image" alt loading="lazy"></figure>
 ## Gerando a credencial temporária para acesso a AWS
 
 Com a engine de secrets da AWS configurada no **Vault** com uma role, podemos solicitar que o Vault faça a geração de uma `access_key` e `secret_key` temporária para esta role ao ler o caminho `aws/creds/<nome>` onde `<nome>` corresponde ao nome da role existente, no nosso caso `ec2-full-access`
@@ -137,11 +137,11 @@ Com a engine de secrets da AWS configurada no **Vault** com uma role, podemos so
 
     $ vault read aws/creds/ec2-full-access
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/05/image-29.png" class="kg-image" alt loading="lazy"><figcaption>$ vault read aws/creds/ec2-full-access</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/05/image-29.png" class="kg-image" alt loading="lazy"><figcaption>$ vault read aws/creds/ec2-full-access</figcaption></figure>
 
 Podemos então utilizar a `access_key` e `secret_key` para acessar a AWS. Podemos também verificar diretamente no painel do _IAM_ na AWS o user criado.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/05/image-30.png" class="kg-image" alt loading="lazy"><figcaption>AWS IAM Users</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/05/image-30.png" class="kg-image" alt loading="lazy"><figcaption>AWS IAM Users</figcaption></figure>
 
 Podemos também revogar a credencial gerada através do comando `vault lease revoke`
 
@@ -149,7 +149,7 @@ Podemos também revogar a credencial gerada através do comando `vault lease rev
 
     $ vault lease revoke aws/creds/ec2-full-access/nHBDTgMmFylGhec6KgISzkvB
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/05/image-31.png" class="kg-image" alt loading="lazy"><figcaption>$ vault lease revoke aws/creds/ec2-full-access/nHBDTgMmFylGhec6KgISzkvB</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/05/image-31.png" class="kg-image" alt loading="lazy"><figcaption>$ vault lease revoke aws/creds/ec2-full-access/nHBDTgMmFylGhec6KgISzkvB</figcaption></figure>
 ## Bônus: Criando uma politica aws-read-only e aws-full-acccess
 
 Agora que temos nossa política **ec2-full-access** criada, seria interessante ter uma política **ec2-read-only** para limitarmos o usuário a apenas visualizar os dados da EC2 e uma para dar acesso total a todos os recursos da AWS.

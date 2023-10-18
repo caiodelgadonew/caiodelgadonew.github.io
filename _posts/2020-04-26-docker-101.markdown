@@ -155,7 +155,7 @@ Podemos também instalar o recurso de Bash Completion através do comando:
 
 Um container docker é um processo em área restrita que executa um aplicativo e suas dependências no sistema operacional hospedeiro. Os recursos do sistema operacional(como o kernel) são compartilhados com os **containers** os quais utilizam apenas os recursos necessários para seu processo ser executado.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-98.png" class="kg-image" alt loading="lazy"><figcaption>Container Docker</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-98.png" class="kg-image" alt loading="lazy"><figcaption>Container Docker</figcaption></figure>
 ## Executando nosso primeiro container Docker
 
 Para garantir que nosso usuário tem as permissões de executar o docker, vamos sair do terminal e conectar novamente via ssh
@@ -169,7 +169,7 @@ Para garantir que nosso usuário tem as permissões de executar o docker, vamos 
 
 Agora podemos testar a execução de um container através do comando `docker container run --rm -it hello-world`
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-93.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run --rm -it hello-world</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-93.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run --rm -it hello-world</figcaption></figure>
 
 Agora precisamos entender os parâmetros utilizados.
 
@@ -188,18 +188,18 @@ Ao executar o container com a imagem `hello-world` o Docker fez os seguintes pas
 2. O `Docker Daemon` fez o download da imagem `hello-world` no[**Docker Hub**](https://hub.docker.com)
 3. O `Docker Daemon` criou um novo container, através da imagem que rodou o executável que produz o texto que vimos no terminal.
 4. O `Docker Daemon` enviou o texto diretamente para o `Docker Client` que enviou para nosso terminal.
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-94.png" class="kg-image" alt loading="lazy"><figcaption>Docker Components</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-94.png" class="kg-image" alt loading="lazy"><figcaption>Docker Components</figcaption></figure>
 ### Imagem
 
 Uma imagem Docker é um pacote executável que inclui tudo o que é necessário para executar um aplicativo, incluindo o código, bibliotecas, variáveis de ambientes e arquivos de configuração.
 
 As imagens do Docker possuem camadas intermediárias que aumentam a capacidade de reutilização, diminuem o uso do disco e aceleram a construção do docker, permitindo que cada etapa seja armazenada em cache. Essas camadas intermediárias não são mostradas por padrão.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-96.png" class="kg-image" alt loading="lazy"><figcaption>Docker Image</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-96.png" class="kg-image" alt loading="lazy"><figcaption>Docker Image</figcaption></figure>
 
 A principal diferença entre um container e uma imagem é a camada gravável superior. Todas as gravações no container que adicionam novos dados ou modificam dados existentes são armazenados nessa camada gravável. Quando o container é excluido, a camada gravável também é excluida. A imagem subjacente permanece inalterada.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-97.png" class="kg-image" alt loading="lazy"><figcaption>Docker Images and Containers</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-97.png" class="kg-image" alt loading="lazy"><figcaption>Docker Images and Containers</figcaption></figure>
 
 Um ponto interessante é que em um cenário onde temos 1 container com a imagem `ubuntu:18.04` por exemplo, ocuparia `200MB` ( estamos considerando este tamanho para a imagem citada) somados a quantidade de dados específicos deste container ( vamos considerar `50MB` para este exemplo) totalizando `250MB`. o mesmo caso com 10 containers serão utilizados os `200MB` da imagem somados aos `50MB` de cada container em execução, pois suas camadas `readonly` é compartilhada, totalizando assim `750MB` no total.
 
@@ -209,7 +209,7 @@ Um ponto interessante é que em um cenário onde temos 1 container com a imagem 
 
 O **DockerHub** é um repositório publico de imagens docker onde podemos escolher e utilizar as imagens para subir nossos containers.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-101.png" class="kg-image" alt loading="lazy"><figcaption>https://hub.docker.com/_/ubuntu</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-101.png" class="kg-image" alt loading="lazy"><figcaption>https://hub.docker.com/_/ubuntu</figcaption></figure>
 
 Ao selecionar uma imagem temos diversas informações inclusive como fazer o download e utilizar a mesma.
 
@@ -231,7 +231,7 @@ Vamos criar um diretório e o arquivo `Dockerfile` para criar nossa primeira ima
     ENTRYPOINT ["echo"]
     CMD ["--help"] 
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-104.png" class="kg-image" alt loading="lazy"><figcaption>file: /vagrant/dockerfiles/echontainer/Dockerfile</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-104.png" class="kg-image" alt loading="lazy"><figcaption>file: /vagrant/dockerfiles/echontainer/Dockerfile</figcaption></figure>
 
 Entendendo nosso Dockerfile:
 
@@ -248,7 +248,7 @@ Para construir a imagem podemos utilizar o comando `docker image build`
     $ cd /vagrant/dockerfiles/echontainer/
     $ docker image build -t echontainer .
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-105.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image build -t echontainer .</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-105.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image build -t echontainer .</figcaption></figure>
 
 Entendendo o comando:
 
@@ -264,7 +264,7 @@ Podemos agora listar as imagens no repositório local da nossa máquina
 
     $ docker image ls
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-106.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image ls</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-106.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image ls</figcaption></figure>
 
 Agora que temos nossa imagem `echontainer` podemos executar nosso container
 
@@ -272,7 +272,7 @@ Agora que temos nossa imagem `echontainer` podemos executar nosso container
 
     $ docker container run -it echontainer
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-107.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run -it echontainer</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-107.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run -it echontainer</figcaption></figure>
 
 Perceba que nosso container foi executado, como resultado tivemos a execução do `entrypoint` do container com os parâmetros do `cmd` no caso executando o comando `echo --help`
 
@@ -280,7 +280,7 @@ Podemos verificar que o container foi executado e parou em sequencia através do
 
 > O comando `docker container ls` lista apenas os containers ativos , o comando `docker container ls -a` lista também os containers não ativos.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-108.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container ls -a</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-108.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container ls -a</figcaption></figure>
 
 > Uma curiosidade é que nosso container recebeu o nome de `pendantic_bohr`, o nome de todos os containers que não são informados para serem criados com um nome através do parâmetro `--name` é gerado da forma `adjetivo` + `_` + `sobrenome` de um cientista ou hackers, lista completa no **[repositório oficial do projeto moby](https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go)**
 
@@ -290,11 +290,11 @@ Podemos também alterar o `cmd` de um container diretamente na execução, passa
 
     $ docker container run -it echontainer "Estou lendo o blog do Caio em https://caiodelgado.dev"
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-109.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run -it echontainer "Estou lendo o blog do Caio em https://caiodelgado.dev"</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-109.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container run -it echontainer "Estou lendo o blog do Caio em https://caiodelgado.dev"</figcaption></figure>
 
 Ao listar os containers através do `docker container ls -a` &nbsp;podemos verificar que o `COMMAND` do container executado foi modificado.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-110.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container ls -a</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-110.png" class="kg-image" alt loading="lazy"><figcaption>$ docker container ls -a</figcaption></figure>
 
 Vamos criar um novo `Dockerfile` para que possamos criar a imagem que utilizaremos no próximo tópico
 
@@ -310,7 +310,7 @@ Vamos criar um novo `Dockerfile` para que possamos criar a imagem que utilizarem
     EXPOSE 80
     CMD lighttpd -D -f /etc/lighttpd/lighttpd.conf
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-112.png" class="kg-image" alt loading="lazy"><figcaption>file: /vagrant/dockerfiles/lighttpd/Dockerfile</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-112.png" class="kg-image" alt loading="lazy"><figcaption>file: /vagrant/dockerfiles/lighttpd/Dockerfile</figcaption></figure>
 
 > O parâmetro `RUN` faz com que seja executado um comando na criação da imagem, o parâmetro `EXPOSE` informa ao docker qual porta deve ser exposta ao criar um container com este `Dockerfile`
 
@@ -323,7 +323,7 @@ Vamos criar a imagem agora
     $ cd /vagrant/lighttpd/lighttpd.conf
     $ docker image build -t lighttpd .
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-113.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image ls</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-113.png" class="kg-image" alt loading="lazy"><figcaption>$ docker image ls</figcaption></figure>
 ### Network 
 
 O Recurso de rede é utilizado para expor a aplicação do container para a rede da máquina hospedeira.
@@ -336,7 +336,7 @@ Trabalharemos com a rede do tipo host, onde é criada uma interface virtual dent
 
 Assim que instalamos o docker, por padrão é criada uma interface bridge chamada de `docker 0`, podemos lista-la através do comando `ip -c a show docker0`
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-114.png" class="kg-image" alt loading="lazy"><figcaption>$ ip -c a show docker0</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-114.png" class="kg-image" alt loading="lazy"><figcaption>$ ip -c a show docker0</figcaption></figure>
 
 > Note que a interface `docker0` encontra-se em estado `DOWN`
 
@@ -357,15 +357,15 @@ Entendendo os parâmetros
 
 Em seguida verifique os status da interface `docker0` que agora estará como `UP` .
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-115.png" class="kg-image" alt loading="lazy"><figcaption>$ ip -c a show docker0</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-115.png" class="kg-image" alt loading="lazy"><figcaption>$ ip -c a show docker0</figcaption></figure>
 
 Acesse agora o endereço `http://docker01.caiodelgado.example` em seu navegador e verifique que nosso webserver está sendo executado.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-117.png" class="kg-image" alt loading="lazy"><figcaption>http://docker01.caiodelgado.example</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-117.png" class="kg-image" alt loading="lazy"><figcaption>http://docker01.caiodelgado.example</figcaption></figure>
 
 Podemos também verificar via terminal através do comando `curl localhost` na máquina `docker01` ou `curl docker01.caiodelgado.example` na nossa máquina local.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-118.png" class="kg-image" alt loading="lazy"><figcaption>$ curl localhost</figcaption></figure><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-119.png" class="kg-image" alt loading="lazy"><figcaption>$ curl docker01.caiodelgado.example</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-118.png" class="kg-image" alt loading="lazy"><figcaption>$ curl localhost</figcaption></figure><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-119.png" class="kg-image" alt loading="lazy"><figcaption>$ curl docker01.caiodelgado.example</figcaption></figure>
 
 Vamos agora remover os containers criados anteriormente, podemos utilizar o comando `docker container ls -aq` para listar apenas os containers por `id` e passando isto como subshell para o comando `docker container rm -f` podemos forçar a remoção de todos os containers que estão rodando ou parados em nossa máquina. &nbsp;
 
@@ -378,7 +378,7 @@ Vamos agora remover os containers criados anteriormente, podemos utilizar o coma
 
 > O subshell pode ser executado através do comando `$(comando)` , sendo assim é executado como se fosse uma operação matemática como por exemplo `2 x (1+3)` , os parênteses são resolvidos primeiramente e depois o externo, logo no nosso comando executado é como se estivessemos executando `docker container rm -f <id1> <id2> <id3>` .
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-120.png" class="kg-image" alt loading="lazy"><figcaption>Listing and Removing containers</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-120.png" class="kg-image" alt loading="lazy"><figcaption>Listing and Removing containers</figcaption></figure>
 ### Volumes
 
 Volumes são recursos utilizados para transportar arquivos e diretórios para dentro de um container.
@@ -415,7 +415,7 @@ Agora que criamos nosso arquivo `index.html` podemos executar nosso container no
 
 Agora que executamos nosso container podemos verificar pelo navegador o endereço `http://docker01.caiodelgado.example` ou através do terminal pelo `curl` como informado no tópico de **Network**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-121.png" class="kg-image" alt loading="lazy"><figcaption>http://docker01.caiodelgado.example</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-121.png" class="kg-image" alt loading="lazy"><figcaption>http://docker01.caiodelgado.example</figcaption></figure>
 
 Este post é o primeiro de uma série de posts onde utilizaremos o **Docker.**
 

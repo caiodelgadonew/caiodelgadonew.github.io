@@ -32,12 +32,12 @@ Bem, o funcionamento de um container não é nada de outro mundo, muito menos um
 Vamos explicar os principais recursos.
 
 ### Linux Namespaces 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-91.png" class="kg-image" alt loading="lazy"><figcaption>Linux Namespaces</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-91.png" class="kg-image" alt loading="lazy"><figcaption>Linux Namespaces</figcaption></figure>
 
 Os **namespaces** são recursos computacionais que fornecem isolamento para os containers, limitando seu acesso a recursos do sistema e outros namespaces. Isso significa, por exemplo, que um usuário root dentro de um container é diferente de um usuário root na máquina hospedeira.
 
 ### Linux Control Groups
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-92.png" class="kg-image" alt loading="lazy"><figcaption>Linux Control Groups</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-92.png" class="kg-image" alt loading="lazy"><figcaption>Linux Control Groups</figcaption></figure>
 
 Os **cgroups** são utilizados para fazer o isolamento dos recursos físicos da máquina. Em geral os cgroups podem ser utilizados para controlar estes recursos tais como limites e reserva de CPU, limites e reservas de memória RAM, dispositivos, etc...
 

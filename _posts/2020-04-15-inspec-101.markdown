@@ -82,7 +82,7 @@ Agora que estamos conectados no servidor podemos acessar a[página de Downloads]
 
 Execute o comando `inspec --version` para garantir que a instalação foi efetuada com sucesso.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-62.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec --version</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-62.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec --version</figcaption></figure>
 
 Uma vez instalado podemos seguir &nbsp;com o entendimento da ferramenta.
 
@@ -102,25 +102,25 @@ Será exibido uma tela em sua primeira execução para aceitar a licença do pro
 
 > A licença está disponível para leitura no **[website da chef]( https://www.chef.io/end-user-license-agreement/)**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-63.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec shell</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-63.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec shell</figcaption></figure>
 
 Após a abertura do inspec shell recebemos uma tela com informações do nosso sistema operacional juntamente a uma mensagem de boas vindas ao `inspec shell`.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-64.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec shell</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-64.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec shell</figcaption></figure>
 
 Nossa `PS1` será modificada para `inspec>` informando que estamos dentro do shell do inspec, podemos utilizar o comando `help` para verificar os comandos possíveis.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-65.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; help</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-65.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; help</figcaption></figure>
 
 O **InSpec** trabalha com resources, para ver quais resources estão disponíveis podemos utilizar o comando `help resources`
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-66.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; help resources</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-66.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; help resources</figcaption></figure>
 
 Podemos também verificar o help de um determinado recurso através do comando `help <resource>`
 
 > O comando `help <resource>` é bastante interessante, uma vez que ele mostra um exemplo de definição de teste.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-67.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; help file</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-67.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; help file</figcaption></figure>
 
 Para utilizar este recurso, primieiramente precisaremos definir o alvo deste recurso, para fazer esta declaração utilizamos o comando `<recurso>('<alvo>')`. Vamos criar nosso primeiro recurso para interagir por exemplo com o arquivo `\etc\hosts`.
 
@@ -128,7 +128,7 @@ Para utilizar este recurso, primieiramente precisaremos definir o alvo deste rec
 
     inspec> file('/etc/hosts')
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-68.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; file('/etc/hosts')</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-68.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; file('/etc/hosts')</figcaption></figure>
 
 Uma vez criado nosso recurso, podemos visualizar as subrotinas dele chamando `<recurso>('<alvo>').methods` .
 
@@ -138,7 +138,7 @@ Uma vez criado nosso recurso, podemos visualizar as subrotinas dele chamando `<r
 
     inspec> file('/etc/hosts/').methods
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-69.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; file('/etc/hosts/').methods</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-69.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; file('/etc/hosts/').methods</figcaption></figure>
 
 Pressione `q` para sair da listagem dos métodos e vamos fazer algumas verificações.
 
@@ -148,7 +148,7 @@ Pressione `q` para sair da listagem dos métodos e vamos fazer algumas verifica�
     inspec> file('/etc/hosts').content
     inspec> file('/etc/hosts').mode
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-70.png" class="kg-image" alt loading="lazy"><figcaption>inspec file </figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-70.png" class="kg-image" alt loading="lazy"><figcaption>inspec file </figcaption></figure>
 
 Podemos também fazer testes por exemplo através do recurso **Package** e verificar informações de um pacote.
 
@@ -158,7 +158,7 @@ Podemos também fazer testes por exemplo através do recurso **Package** e verif
     inspec> package('vim').version
     inspec> package('vim').info
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-71.png" class="kg-image" alt loading="lazy"><figcaption>inspec package</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-71.png" class="kg-image" alt loading="lazy"><figcaption>inspec package</figcaption></figure>
 ## Entendendo Comparadores
 
 Antes de escrever nossos testes, primeiramente precisamos entender os comparadores. Podemos lista-los através do comando `help matchers` no inspec shell.
@@ -191,7 +191,7 @@ Vamos descrever um controle no inspec shell para verificar se um arquivo existe.
       it { should exist }
     end
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-72.png" class="kg-image" alt loading="lazy"><figcaption>inspec control file </figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-72.png" class="kg-image" alt loading="lazy"><figcaption>inspec control file </figcaption></figure>
 
 Será exibido um relatório com os controles realizados. Podemos também descrever vários controles em um único recurso.
 
@@ -204,7 +204,7 @@ Será exibido um relatório com os controles realizados. Podemos também descrev
       its('mode') { should eq '0644' }
     end
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-74.png" class="kg-image" alt loading="lazy"><figcaption>inspec testing </figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-74.png" class="kg-image" alt loading="lazy"><figcaption>inspec testing </figcaption></figure>
 
 Perceba que o teste `its('mode') { should eq '0644' }` falhou pois utilizamos o `eq`o qual realiza um teste literal do alvo. Neste caso podemos utilizar o `cmp` que irá igualar as unidades `octal` e `decimal` passando assim o teste.
 
@@ -217,11 +217,11 @@ Perceba que o teste `its('mode') { should eq '0644' }` falhou pois utilizamos o 
       its('mode') { should cmp '0644' }
     end
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-75.png" class="kg-image" alt loading="lazy"><figcaption>inspec testing</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-75.png" class="kg-image" alt loading="lazy"><figcaption>inspec testing</figcaption></figure>
 
 Após a execução digite `exit` para sair do inspec shell.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-76.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; exit</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-76.png" class="kg-image" alt loading="lazy"><figcaption>inspec&gt; exit</figcaption></figure>
 ## Executando o inspec shell remotamente
 
 Podemos executar o inspec shell remotamente, para isto utilizaremos a máquina criada no post do blog **[vault-101](/vault-101).**
@@ -258,7 +258,7 @@ Primeiramente vamos criar um par de chaves para utilização da máquina inspec.
     <ENTER>
     <ENTER>
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-77.png" class="kg-image" alt loading="lazy"><figcaption>generating RSA 2048 keypairs</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-77.png" class="kg-image" alt loading="lazy"><figcaption>generating RSA 2048 keypairs</figcaption></figure>
 
 Agora vamos copiar o conteúdo da chave publica gerada pela máquina **inspec.** E adiciona-la a máquina **vault**.
 
@@ -286,7 +286,7 @@ Na máquina **inspec** :
 
     $ inspec shell -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-81.png" class="kg-image" alt loading="lazy"><figcaption>inspec remote shell</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-81.png" class="kg-image" alt loading="lazy"><figcaption>inspec remote shell</figcaption></figure>
 
 Como saber se estou de fato conectado na máquina vault através do inspec shell? simples, podemos executar diversos comandos como por exemplo:
 
@@ -295,7 +295,7 @@ Como saber se estou de fato conectado na máquina vault através do inspec shell
     inspec> sys_info.hostname
     inspec> interface('enp0s8').ipv4_addresses
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-79.png" class="kg-image" alt loading="lazy"><figcaption>inspec shell commands</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-79.png" class="kg-image" alt loading="lazy"><figcaption>inspec shell commands</figcaption></figure>
 
 Vamos executar um novo teste.
 
@@ -306,7 +306,7 @@ Vamos executar um novo teste.
       it { should be_running }
     end
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-80.png" class="kg-image" alt loading="lazy"><figcaption>inspec shell </figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-80.png" class="kg-image" alt loading="lazy"><figcaption>inspec shell </figcaption></figure>
 
 Através dos testes acima, conseguimos verificar que um serviço está habilitado e sendo executado, conseguimos ir mais a fundo nos testes verificando inclusive se uma aplicação está em estado `listening` por exemplo.
 
@@ -330,7 +330,7 @@ Vamos fazer um teste para o `mysqld` e um teste para o `vault`.
       its('processes') { should include 'vault' }
     end
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-82.png" class="kg-image" alt loading="lazy"><figcaption>inspec testing listening processes</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-82.png" class="kg-image" alt loading="lazy"><figcaption>inspec testing listening processes</figcaption></figure>
 
 Após isto, podemos fechar o inspec shell digitando `exit`.
 
@@ -394,7 +394,7 @@ Na máquina **inspec**
     $ cd /vagrant/inspec-profiles/
     $ inspec init profile vault
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-83.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec init profile vault</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-83.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec init profile vault</figcaption></figure>
 
 Este comando irá criar toda a estrutura de diretórios, por ora iremos trabalhar apenas com o arquivo de controle.
 
@@ -495,7 +495,7 @@ Podemos verificar a sintax através do comando `inspec check profile <path>`
 
     $ inspec check /vagrant/inspec-profiles/vault
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-84.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec check /vagrant/inspec-profiles/vault</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-84.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec check /vagrant/inspec-profiles/vault</figcaption></figure>
 
 Uma vez construido e funcional nosso teste, podemos executar através do comando `inspec exec`
 
@@ -503,13 +503,13 @@ Uma vez construido e funcional nosso teste, podemos executar através do comando
 
     $ inspec exec /vagrant/inspec-profiles/vault -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-85.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec exec /vagrant/inspec-profiles/vault -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-85.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec exec /vagrant/inspec-profiles/vault -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa</figcaption></figure>
 
 Os testes com sucesso são apresentados em verde e os testes com falha são apresentados em vermelho.
 
 Irei parar o serviço do **vault** no vault server para fins de exemplo e rodar novamente o comando.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-86.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec exec /vagrant/inspec-profiles/vault -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-86.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec exec /vagrant/inspec-profiles/vault -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa</figcaption></figure>
 ## Supermarket 
 
 O **InSpec** também dispõe de um repositório de profiles chamado **supermarket.** Podemos executar os testes diretamente do supermarket bem como listar os testes disponíveis.
@@ -521,7 +521,7 @@ Liste os profiles disponíveis no supermarket e exiba informações sobre um pro
     $ inspec supermarket profiles
     $ inspec supermarket info dev-sec/linux-baseline
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-87.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec supermarket info dev-sec/linux-baseline</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-87.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec supermarket info dev-sec/linux-baseline</figcaption></figure>
 
 > Os profiles **[dev-sec](https://dev-sec.io/)** fazem parte de uma iniciativa de automação de hardening de servidores, basicamente definem testes bases para serem utilizados em diversas situações.
 
@@ -542,7 +542,7 @@ Execute o profile &nbsp;`dev-sec/linux-baseline` remotamente na máquina vault.
 
     $ inspec exec supermarket://dev-sec/linux-baseline -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="content/images/2020/04/image-88.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec exec supermarket://dev-sec/linux-baseline -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-88.png" class="kg-image" alt loading="lazy"><figcaption>$ inspec exec supermarket://dev-sec/linux-baseline -t ssh://root@vault.caiodelgado.example -i ~/.ssh/id_rsa</figcaption></figure>
 
 > Podemos verificar através da execução do profile `dev-sec/linux-baseline` que a box do vagrant possui diversas falhas de segurança, uma vez que não existe o hardening, por este motivo citei no meu post **[vagrant-101](/vagrant-101)** que não recomendo a utilização de box prontas para ambientes que não sejam de desenvolvimento e estudo.
 
