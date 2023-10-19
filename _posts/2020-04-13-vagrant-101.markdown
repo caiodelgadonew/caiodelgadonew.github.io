@@ -50,7 +50,7 @@ Para instalar o vagrant devemos acessar a **[página oficial de downloads](https
 
 Podemos executar o comando `vagrant --version` para verificar se o vagrant foi instalado corretamente.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-53.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant --version</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-53.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant --version</figcaption></figure>
 ## Definindo as Máquinas Virtuais
 
 Em nosso post, estaremos utilizando o **VirtualBox 6.1** , para isto basta efetuar o download do virtualbox através da **[página oficial de downloads](https://www.virtualbox.org/wiki/Downloads)** e efetuar a instalação de acordo com seu sistema operacional.
@@ -128,15 +128,15 @@ Agora que temos nosso ambiente disponível, podemos acessar o mesmo através do 
 
 Note também diretamente no **Virtualbox** que a máquina foi criada.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-61.png" class="kg-image" alt loading="lazy"><figcaption>VirtualBox</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-61.png" class="kg-image" alt loading="lazy"><figcaption>VirtualBox</figcaption></figure>
 
 Quando utilizamos o comando `vagrant ssh` o que acontece "por trás dos panos" é simplesmente um comando SSH comum, onde a chave utilizada esta armazenada no diretório oculto **.vagrant** localizado no mesmo diretório do **Vagrantfile.**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-54.png" class="kg-image" alt loading="lazy"><figcaption>$ tree -a</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-54.png" class="kg-image" alt loading="lazy"><figcaption>$ tree -a</figcaption></figure>
 
 Podemos verificar a fundo os parâmetros utilizados pelo `vagrant ssh` através do comando `vagrant ssh-config`.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-56.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh-config</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-56.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh-config</figcaption></figure>
 
 Para desligar a máquina podemos utilizar o comando `vagrant halt` e para destruir o ambiente podemos executar o comando `vagrant destroy` e digitar `y` para confirmar a destruição do ambiente.
 
@@ -172,7 +172,7 @@ Vamos construir nossa infraestrutura novamente e verificar os status da mesma.
     $ vagrant up
     $ vagrant status
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-57.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant status</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-57.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant status</figcaption></figure>
 
 Para acessar cada máquina podemos utilizar o comando `vagrant ssh <machine_name>`, podemos também verificar o sistema operacional através do comando `cat /etc/*release`.
 
@@ -195,7 +195,7 @@ Podemos também executar um comando diretamente através do parâmetro `-c` no `
     $ vagrant ssh server1 -c "cat /etc/*release"
     $ vagrant ssh server2 -c "cat /etc/*release"
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-58.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh &lt;machine&gt; -c "cat /etc/*release" </figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-58.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh &lt;machine&gt; -c "cat /etc/*release" </figcaption></figure>
 
 Vamos destruir nosso ambiente.
 
@@ -274,7 +274,7 @@ Vamos construir nosso ambiente e verificar se o nginx foi instalado com sucesso.
 
 Podemos também verificar diretamente no navegador digitando o endereço do servidor
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-59.png" class="kg-image" alt loading="lazy"><figcaption>nginx on google chrome</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-59.png" class="kg-image" alt loading="lazy"><figcaption>nginx on google chrome</figcaption></figure>
 
 Vamos destruir nosso ambiente novamente.
 
@@ -390,7 +390,7 @@ Podemos verificar estado do cluster através do comando
 
     $ vagrant ssh master -c "docker node ls"
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-60.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh master -c "docker node ls"</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-60.png" class="kg-image" alt loading="lazy"><figcaption>$ vagrant ssh master -c "docker node ls"</figcaption></figure>
 
 O código deste post encontra-se no repositório: [https://github.com/caiodelgadonew/blog-vagrant-101](https://github.com/caiodelgadonew/blog-vagrant-101)
 

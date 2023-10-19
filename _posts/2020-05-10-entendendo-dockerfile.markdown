@@ -116,7 +116,7 @@ A instrução `WORKDIR` configura o diretório de trabalho ara qualquer instruç
 
 Para visualizar um Dockerfile, podemos ir no **[Docker Hub](https://hub.docker.com)** pesquisar pela imagem e na descrição clicar na tag desejada. No caso abaixo, selecionei a tag `current-alpine` da imagem `node`
 
-<figure class="kg-card kg-image-card"><img src="/docs/assets/2020/05/image-32.png" class="kg-image" alt loading="lazy"></figure>
+<figure class="kg-card kg-image-card"><img src="/assets/2020/05/image-32.png" class="kg-image" alt loading="lazy"></figure>
 
     FROM buildpack-deps:buster
     

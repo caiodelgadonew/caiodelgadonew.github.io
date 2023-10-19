@@ -251,19 +251,19 @@ Todo servidor do Vault inicializa em &nbsp;`sealed state` (estado lacrado/selado
 
 Para destravar o cofre (`unseal the vault` ) podemos executar o comando `vault operator unseal` e digitar uma das chaves.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-41.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator unseal</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-41.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator unseal</figcaption></figure>
 
 Note que o `Unseal Progress` é listado como `1/3` ou seja, digitamos uma de 3 chaves necessárias para destravar o cofre e o mesmo encontra-se em estado de `Sealed`. Repita o passo mais duas vezes com chaves diferentes para destravar &nbsp;o cofre.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-42.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator unseal</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-42.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator unseal</figcaption></figure>
 
 Uma vez que o cofre for destravado, a mensagem de exibição será `Sealed false` o que significa que podemos começar a utilizar nosso vault.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-43.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator init</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-43.png" class="kg-image" alt loading="lazy"><figcaption>$ vault operator init</figcaption></figure>
 
 Finalmente podemos autenticar com o usuário root criado inicialmente. para isto execute o comando `vault login` somado do token informado no processo do `vault operator init`.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-44.png" class="kg-image" alt loading="lazy"><figcaption>$ vault login</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-44.png" class="kg-image" alt loading="lazy"><figcaption>$ vault login</figcaption></figure>
 ## Criando secrets no Vault
 
 Agora que configuramos nosso servidor podemos voltar a nossa estação de trabalho e parametrizar o vault para acessar nosso server, para facilitar este processo iremos criar um script para parametrizar nosso client
@@ -284,11 +284,11 @@ Agora que configuramos nosso servidor podemos voltar a nossa estação de trabal
 
 Execute `vault status` para verificar se o vault foi configurado corretamente.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-45.png" class="kg-image" alt loading="lazy"><figcaption>$ vault status</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-45.png" class="kg-image" alt loading="lazy"><figcaption>$ vault status</figcaption></figure>
 
 Uma vez configuradas as variáveis de ambiente, podemos interagir com nosso vault server, efetue o login através do comando `vault login $VAULT_TOKEN`.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-46.png" class="kg-image" alt loading="lazy"><figcaption>$ vault login $VAULT_TOKEN</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-46.png" class="kg-image" alt loading="lazy"><figcaption>$ vault login $VAULT_TOKEN</figcaption></figure>
 
 O **Vault** trabalha, por padrão com secrets em formato `kv` (`key-value`). &nbsp;Para habilitar um secret utilizamos o comando `vault secrets enable <path>` ou `vault secrets enable -path=<path> <secret_type>`
 
@@ -301,7 +301,7 @@ Inicialmente iremos trabalhar com secrets do tipo `kv`, para isto, crie o nosso 
     $ vault secrets enable -path=blog -description='Segredos do Blog' kv 
     $ vault secrets list
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-47.png" class="kg-image" alt loading="lazy"><figcaption>creating storage path</figcaption></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-47.png" class="kg-image" alt loading="lazy"><figcaption>creating storage path</figcaption></figure>
 
 Para criar um secret em um determinado path, podemos utilizar o comando `vault kv put <path>/<secret-name> <key>=<value>`
 
@@ -323,11 +323,11 @@ Uma mensagem de sucesso informa que o secret foi criado.
 
 Utilize o comando `vault kv list <path>` para verificar as chaves existentes no storage.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-48.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-48.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog</figcaption></figure>
 
 Para acessar um secret utilizamos o comando `vault kv get <path>/<secret>`.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-49.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv get blog/caiodelgado</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-49.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv get blog/caiodelgado</figcaption></figure>
 
 Um secret pode possuir diversos atributos `key-value` bem como subdiretórios, vamos adicionar mais alguns atributos ao nosso path:
 
@@ -339,17 +339,17 @@ Um secret pode possuir diversos atributos `key-value` bem como subdiretórios, v
 
 Listando o nosso path conseguimos verificar que existem agora um secret chamado `caiodelgado` bem como um sub-path `caiodelgado/`
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-50.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-50.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog</figcaption></figure>
 
 Para verificar o conteúdo do subpath basta informar o mesmo no comando para listagem.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-51.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog/caiodelgado/</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-51.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv list blog/caiodelgado/</figcaption></figure>
 
 > Mesmo que não seja informada a `/` final o vault entende que ao utilizar o comando `list` você quer listar um path
 
 Verifique os valores do secret `data`
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-52.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv get blog/caiodelgado/data</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-52.png" class="kg-image" alt loading="lazy"><figcaption>$ vault kv get blog/caiodelgado/data</figcaption></figure>
 
 Este post é o primeiro de uma série de posts onde utilizaremos o **Vault.**
 

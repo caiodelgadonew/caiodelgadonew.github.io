@@ -196,19 +196,19 @@ Após a criação do arquivo **docker-compose.yml** podemos prosseguir com a cri
 
 Podemos acessar agora o dashboard através do endereço configurado no parâmetro **traefik.http.router.traefik.rule** caso as entradas tenham sido criadas corretamente no servidor DNS
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/03/traefik1.png" class="kg-image" alt loading="lazy"><figcaption>Traefik Dashboard</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/03/traefik1.png" class="kg-image" alt loading="lazy"><figcaption>Traefik Dashboard</figcaption></figure>
 
 Através do dashboard podemos verificar informações sobre os routers, services e middlewares criados no nosso traefik, verifique também que o website já está com o certificado válido do Let's Encrypt.
 
-<figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/letsencrypt.png" class="kg-image" alt loading="lazy"></figure>
+<figure class="kg-card kg-image-card"><img src="/assets/2020/03/letsencrypt.png" class="kg-image" alt loading="lazy"></figure>
 
 Podemos também verificar em **Routers** clicando em **Explore** os roteadores criados bem como para onde estão encaminhando cada requisição.
 
-<figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/routers.png" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/router1.png" class="kg-image" alt loading="lazy"></figure>
+<figure class="kg-card kg-image-card"><img src="/assets/2020/03/routers.png" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="/assets/2020/03/router1.png" class="kg-image" alt loading="lazy"></figure>
 
 E também podemos acessar esta aplicação através do Host criado, verifique também que a aplicação é automaticamente redirecionada de http para https
 
-<figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/web.png" class="kg-image" alt loading="lazy"></figure>
+<figure class="kg-card kg-image-card"><img src="/assets/2020/03/web.png" class="kg-image" alt loading="lazy"></figure>
 
 Caso seja necessário escalar nossa aplicação, o próprio traefik ficará responsável por efetuar o balanceamento de cargas da aplicação.
 
@@ -222,7 +222,7 @@ Execute no terminal o comando para aumentar a quantidade de replicas para 5 da a
 
 Atualize a página da aplicação web e verifique que o IP será alterado informando que estamos caindo em containers diferentes.
 
-<figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/web1.png" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/web2.png" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/web3.png" class="kg-image" alt loading="lazy"></figure>
+<figure class="kg-card kg-image-card"><img src="/assets/2020/03/web1.png" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="/assets/2020/03/web2.png" class="kg-image" alt loading="lazy"></figure><figure class="kg-card kg-image-card"><img src="/assets/2020/03/web3.png" class="kg-image" alt loading="lazy"></figure>
 
 Outra coisa que podemos fazer para aumentar a segurança do nosso dashboard é adicionar um middleware de autenticação através das seguintes labels:
 
@@ -263,7 +263,7 @@ Podemos subir novamente nosso compose e verificar na interface web se a senha é
 
     docker-compose up -d
 
-<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="/docs/assets/2020/03/pass.png" class="kg-image" alt loading="lazy"></figure>
+<!--kg-card-end: markdown--><figure class="kg-card kg-image-card"><img src="/assets/2020/03/pass.png" class="kg-image" alt loading="lazy"></figure>
 
 Após digitar a senha o painel é exibido com sucesso.
 

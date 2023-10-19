@@ -51,31 +51,31 @@ Não irei cobrir o passo a passo da criação da conta uma vez que já possúo m
 
 Acesse o [console da AWS](https://console.aws.amazon.com)e faça o login com sua conta e pesquise pelo produto **IAM** (Identity and Access Management)
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-2.png" class="kg-image" alt loading="lazy"><figcaption>AWS Services Console </figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-2.png" class="kg-image" alt loading="lazy"><figcaption>AWS Services Console </figcaption></figure>
 
 Iremos criar um usuário para interagir com a AWS, clique em **USERS** e em seguida em **ADD USER**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-3.png" class="kg-image" alt loading="lazy"><figcaption>Add User</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-3.png" class="kg-image" alt loading="lazy"><figcaption>Add User</figcaption></figure>
 
 Digite um nome para o usuário, selecione **programatic access** para que seja criado um ID e Senha para a chave de acesso e clique em **Next.**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-18.png" class="kg-image" alt loading="lazy"><figcaption>Programatic Access</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-18.png" class="kg-image" alt loading="lazy"><figcaption>Programatic Access</figcaption></figure>
 
 Adicione a politica **AmazonEC2FullAccess** ao usuário, o que dará permissão total ao usuário apenas a recursos da EC2, e clique em **Next.**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-12.png" class="kg-image" alt loading="lazy"><figcaption>Attaching Policies</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-12.png" class="kg-image" alt loading="lazy"><figcaption>Attaching Policies</figcaption></figure>
 
 **Tags** são utilizadas para adicionar informações relevantes ao usuario, clique em **Next.**
 
-<figure class="kg-card kg-image-card"><img src="/docs/assets/2020/04/image-13.png" class="kg-image" alt loading="lazy"></figure>
+<figure class="kg-card kg-image-card"><img src="/assets/2020/04/image-13.png" class="kg-image" alt loading="lazy"></figure>
 
 Verifique os dados e clique em **Create user**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-14.png" class="kg-image" alt loading="lazy"><figcaption>Create User</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-14.png" class="kg-image" alt loading="lazy"><figcaption>Create User</figcaption></figure>
 
 Clique em **show** e copie o **Access key ID** e **Secret access key**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-15.png" class="kg-image" alt loading="lazy"><figcaption>Access Key and Secret Access Key </figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-15.png" class="kg-image" alt loading="lazy"><figcaption>Access Key and Secret Access Key </figcaption></figure>
 
 > O usuário criado e chave de acesso não devem ser compartilhados, uma vez que quem tiver acesso a estes dados terá controle sobre os recursos adicionados como política, por questões de segurança este usuário não existe mais em minha conta.
 
@@ -94,11 +94,11 @@ Iremos [instalar o AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/ins
 
 Verifique a instalação através do comando `aws --version` que deve retornar a versão atual do `aws cli` instalado, agora iremos configurar nosso cli com o ID e chave de acesso criadas anteriormente, execute o comando `aws configure` e em seguida digite o ID e Chave (para região e output format apenas tecle **\<ENTER\>** ).
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-21.png" class="kg-image" alt loading="lazy"><figcaption>$ aws configure</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-21.png" class="kg-image" alt loading="lazy"><figcaption>$ aws configure</figcaption></figure>
 
 Isso vai configurar o arquivo `~/.aws/credentials` com suas credenciais
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-20.png" class="kg-image" alt loading="lazy"><figcaption>file: ~/.aws/credentials</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-20.png" class="kg-image" alt loading="lazy"><figcaption>file: ~/.aws/credentials</figcaption></figure>
 ### Instalando o Terraform
 
 Iremos fazer o download da versão do terraform **0.12.24** no momento da escrita deste post.
@@ -203,31 +203,31 @@ Novamente estamos declarando diversas variáveis e precisamos definilas em um ar
 
 Agora que ja criamos nosso arquivo precisamos executar o comando `terraform init` para que seja feito download dos providers do terraform em nosso diretório.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-22.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform init</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-22.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform init</figcaption></figure>
 
 Agora que iniciamos o provider teremos uma pasta oculta `.terraform` em nosso diretório com os plugins necessários.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-24.png" class="kg-image" alt loading="lazy"><figcaption>Terraform 101 Directory Structure</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-24.png" class="kg-image" alt loading="lazy"><figcaption>Terraform 101 Directory Structure</figcaption></figure>
 
 Podemos agora efetuar o planejamento da nossa infraestrutura através do comando `terraform plan` , que será responsável por nos mostrar qual seria o resultado após a aplicação do nosso código.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-25.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-25.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
 
 No final da saída do comando é exibido quantos planos serão aplicados, modificados ou destruídos.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-26.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-26.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
 
 Para aplicar o plano utilizaremos o comando `terraform apply` que nos mostrará o resultado do plan e perguntando se queremos aplicar o recurso, digite **yes** para iniciar a aplicação.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-28.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-28.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
 
 Após isto é exibida a informação dos recursos que estão sendo criados bem como o estado final após execução
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-31.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-31.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
 
 No painel da **AWS** podemos ir em **EC2** e verificar a instância que foi criada conforme as configurações listadas.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-32.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-32.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
 
 Ao executar um terraform, é criado um arquivo `terraform.tfstate` no diretório com o conteúdo do que foi criado/modificado para que o terraform possa efetuar ações de modificação na infraestrutura sabendo seu estado anterior.
 
@@ -267,31 +267,31 @@ Vamos alterar o nome da variável `name` para `server02` e executar novamente o 
 
 Execute o `terraform plan` e verifique que o nome da instância será modificado, porém ela não será destruida e recriada.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-34.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-34.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform plan</figcaption></figure>
 
 Podemos executar o `terraform apply` para aplicar a configuração **.**
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-35.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-35.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
 
 Note que agora é exibido que um componente foi atualizado.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-36.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-36.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform apply</figcaption></figure>
 
 Podemos também verificar na **EC2** da **AWS** que a modificação foi efetuada com sucesso.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-37.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-37.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
 
 Para destruir a instância podemos executar o comando `terraform destroy`
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-33.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform destroy </figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-33.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform destroy </figcaption></figure>
 
 Digite **yes** para destruir a instância, note que o processo todo levará um tempo para ser executado, aguarde o retorno pelo terminal.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-38.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform destroy</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-38.png" class="kg-image" alt loading="lazy"><figcaption>$ terraform destroy</figcaption></figure>
 
 Verifique também no **EC2** da **AWS &nbsp;** que a instância foi terminada.
 
-<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/docs/assets/2020/04/image-40.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
+<figure class="kg-card kg-image-card kg-card-hascaption"><img src="/assets/2020/04/image-40.png" class="kg-image" alt loading="lazy"><figcaption>AWS EC2</figcaption></figure>
 
 Irei continuar uma série de posts sobre Terraform e gradativamente aumentando a complexidade com outros recursos e inclusive integrando com **ansible** e outras ferramentas. Não deixe de acompanhar o blog!
 
