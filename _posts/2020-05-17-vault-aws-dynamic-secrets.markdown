@@ -10,15 +10,15 @@ tags:
 
 O Vault tem diversas funcionalidades e dizer que ele é apenas um "cofre de senhas" não é correto, uma vez que ele tem todo um motor e diversas integrações  
   
-Hoje iremos integrar nosso Vault server criado no post **[Vault 101](/vault-101/)** com a AWS utilizada no post [**Terraform 101**](/terraform-101) para que possamos gerenciar o acesso a AWS de forma segura utilizando **Dynamic Secrets**.
+Hoje iremos integrar nosso Vault server criado no post **[Vault 101](/posts/vault-101/)** com a AWS utilizada no post [**Terraform 101**](/terraform-101) para que possamos gerenciar o acesso a AWS de forma segura utilizando **Dynamic Secrets**.
 
-> Caso você tenha chegado agora no blog, verifique todos os posts na [**TAG: IAC**](/tag/iac/) , com certeza você encontrará vários conteúdos interessantes por lá.
+> Caso você tenha chegado agora no blog, verifique todos os posts na [**TAG: IAC**](/tags/iac/) , com certeza você encontrará vários conteúdos interessantes por lá.
 
 ## Primeiros Passos
 
 Primeiramente iremos ligar e acessar nossa máquina Vault, bem como Destravar o cofre de segredos.
 
-> Caso não tenha a máquina ainda, a recomendação é que siga o post do **[vault-101](/vault-101/).**
+> Caso não tenha a máquina ainda, a recomendação é que siga o post do **[vault-101](/posts/vault-101/).**
 
 Abra um novo terminal e ligue a máquina vault
 

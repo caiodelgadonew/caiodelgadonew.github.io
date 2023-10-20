@@ -9,7 +9,7 @@ tags:
 - docker
 ---
 
-Agora que você já deu os [**Primeiros Passos com Docker e muito mais**](/docker-101/) **.** Vamos começar a cobrir cada uma das áreas do Docker para você poder se aprofundar neste universo.
+Agora que você já deu os [**Primeiros Passos com Docker e muito mais**](/posts/docker-101/) **.** Vamos começar a cobrir cada uma das áreas do Docker para você poder se aprofundar neste universo.
 
 A primeira área será a de **Docker Images** começando com o **Dockerfile**.
 

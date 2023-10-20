@@ -9,7 +9,7 @@ tags:
 - docker
 ---
 
-Hoje iremos passar por uma série de _dicas_ para melhorar nosso conhecimento na etapa de **build** da imagem. Já **[entendemos como funciona o Dockerfile](/entendendo-dockerfile/)**, agora o ideal é que estas imagens sejam criadas utilizando as melhores práticas.
+Hoje iremos passar por uma série de _dicas_ para melhorar nosso conhecimento na etapa de **build** da imagem. Já **[entendemos como funciona o Dockerfile](/posts/entendendo-dockerfile/)**, agora o ideal é que estas imagens sejam criadas utilizando as melhores práticas.
 
 Provavelmente não irei cobrir todas as melhores práticas para a criação da nossa imagem, uma vez que a cada dia que passa novas técnicas são criadas e as atuais são melhoradas, mas quero que você saia daqui hoje sabendo mais do que ontem e menos que amanhã, então vamos lá!
 
@@ -17,7 +17,7 @@ Provavelmente não irei cobrir todas as melhores práticas para a criação da n
 
 O **Docker** constrói a imagem automaticamente lendo as instruções de um `Dockerfile`, que é um documento de texto que contém todos os comandos necessários para a criação de uma determinada imagem.
 
-> Caso você não tenha acompanhado os outros posts sobre Docker, sugiro que veja a **[TAG: Docker](/tag/docker/)** no blog e principalmente o post **[Docker 101](/docker-101)** pois iremos utilizar a máquina criada no post para criação das imagens.
+> Caso você não tenha acompanhado os outros posts sobre Docker, sugiro que veja a **[TAG: Docker](/tags/docker/)** no blog e principalmente o post **[Docker 101](/posts/docker-101)** pois iremos utilizar a máquina criada no post para criação das imagens.
 
 ## Recomendações gerais 
 
@@ -31,7 +31,7 @@ Quando executamos o comando `docker image build` , o diretório no qual apontamo
 
 > Por isto não devemos, por exemplo, criar um `Dockerfile` diretamente em nossa home &nbsp;`~/Dockerfile` , uma vez que todo o conteúdo, inclusive o cache de navegadores web e todas aplicações `~/.cache` será enviado para o Docker daemon, muitas das vezes falhando a build ou até mesmo fazendo com que ela demore muito tempo.
 
-A partir de agora tilizaremos nossa máquina **docker01** criada no post **[Docker-101](/docker-101)**. Estou assumindo que você já subiu a máquina e conectou na mesma via `ssh` . Caso você não possua a máquina pode voltar no post do blog para cria-la ou fazer na sua máquina atual com o Docker instalado.
+A partir de agora tilizaremos nossa máquina **docker01** criada no post **[Docker-101](/posts/docker-101)**. Estou assumindo que você já subiu a máquina e conectou na mesma via `ssh` . Caso você não possua a máquina pode voltar no post do blog para cria-la ou fazer na sua máquina atual com o Docker instalado.
 
 Aqui daremos dois exemplos, um com a criação de uma imagem com o Dockerfile no mesmo diretório do contexto, e outro em diretórios diferentes.
 

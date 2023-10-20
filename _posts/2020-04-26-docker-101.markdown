@@ -26,7 +26,7 @@ Podemos utilizar o **Docker** instalado diretamente em nossa máquina, mas para 
 
 > A idéia é quem passar por todos os posts ter um laboratório real de Infraestrutura como Código.
 
-> Caso você queira conhecer o vagrant sugiro que leia o post **[Vagrant 101](/vagrant-101/)** do blog. Você pode verificar todos os posts introdutórios através da **[tag 101](/tag/101)**
+> Caso você queira conhecer o vagrant sugiro que leia o post **[Vagrant 101](/vagrant-101/)** do blog. Você pode verificar todos os posts introdutórios através da **[tag 101](/tags/101)**
 
 ### Vagrantfile para o Docker 
 
@@ -395,7 +395,7 @@ Vamos criar o arquivo `index.html` para substituirmos o index da imagem `lighttp
     <meta charset="UTF-8">
     <h1> Servidor Lighttpd</h1>
     <p> Esta aplicação está sendo executada em um container Docker
-    <h2> Acesse o tutorial em https://caiodelgado.dev/docker-101 </h2>
+    <h2> Acesse o tutorial em https://caiodelgado.dev/posts/docker-101 </h2>
     EOF
 
 <!--kg-card-end: markdown-->

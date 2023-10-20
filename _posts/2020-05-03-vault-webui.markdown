@@ -9,15 +9,15 @@ tags:
 
 Como dito anteriormente, o Vault disponibiliza acesso aos dados através de Interface Gráfica, Linha de Comando ou Chamada HTTP em sua API.  
   
-Hoje iremos habilitar a interface gráfica (web) para nosso Vault server criado no post [**Vault 101 - Aplicando segurança na sua Infraestrutura como Código**](/vault-101/) **.**
+Hoje iremos habilitar a interface gráfica (web) para nosso Vault server criado no post [**Vault 101 - Aplicando segurança na sua Infraestrutura como Código**](/posts/vault-101/) **.**
 
-> Caso você tenha chegado agora no blog, verifique todos os posts na [**TAG: IAC**](/tag/iac/) , com certeza você encontrará vários conteúdos interessantes por lá.
+> Caso você tenha chegado agora no blog, verifique todos os posts na [**TAG: IAC**](/tags/iac/) , com certeza você encontrará vários conteúdos interessantes por lá.
 
 ## Primeiros Passos
 
 Primeiramente iremos ligar e acessar nossa máquina Vault, bem como Destravar o cofre de segredos.
 
-> Caso não tenha a máquina ainda, a recomendação é que siga o post do **[vault-101](/vault-101/).**
+> Caso não tenha a máquina ainda, a recomendação é que siga o post do **[vault-101](/posts/vault-101/).**
 
 Abra um novo terminal e ligue a máquina vault
 

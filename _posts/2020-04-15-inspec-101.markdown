@@ -226,7 +226,7 @@ Após a execução digite `exit` para sair do inspec shell.
 
 Podemos executar o inspec shell remotamente, para isto utilizaremos a máquina criada no post do blog **[vault-101](/vault-101).**
 
-> Caso não tenha a máquina ainda, a recomendação é que siga o post do **[vault-101](/vault-101/).** Também pode ser utilizada qualquer outra máquina com acesso via SSH, porém iremos utilizar o conjunto em outros posts, integrando todas as ferramentas para construção de uma infraestrutura como código.
+> Caso não tenha a máquina ainda, a recomendação é que siga o post do **[vault-101](/posts/vault-101/).** Também pode ser utilizada qualquer outra máquina com acesso via SSH, porém iremos utilizar o conjunto em outros posts, integrando todas as ferramentas para construção de uma infraestrutura como código.
 
 Abra um novo terminal e ligue a máquina **vault**
 
